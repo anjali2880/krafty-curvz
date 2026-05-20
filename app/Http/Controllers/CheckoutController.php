@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\SiteSettings;
 use App\Services\Payment\PaymentManager;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -102,6 +103,8 @@ class CheckoutController extends Controller
                 ->with('error', 'Your cart is empty!');
         }
 
+        $cartSupportsSendItem = $this->cartSupportsSendItem($cart);
+
         $subtotal = 0;
         foreach ($cart as $item) {
             $subtotal += $item['price'] * $item['quantity'];
@@ -121,10 +124,18 @@ class CheckoutController extends Controller
             }
         }
 
-        $customerWillSendItem = $cartSupportsSendItem
-            && (($validated['order_type'] ?? 'normal') === 'send_item' || $detectedSendItem);
+        $effectiveOrderType = $validated['order_type']
+            ?? session('checkout_order_type')
+            ?? 'normal';
+        $effectiveItemDescription = $validated['item_description']
+            ?? session('checkout_item_description');
+        $effectiveCustomNote = $validated['custom_note']
+            ?? session('checkout_custom_note');
 
-        if ($customerWillSendItem && empty(trim((string) ($validated['item_description'] ?? '')))) {
+        $customerWillSendItem = $cartSupportsSendItem
+            && ($effectiveOrderType === 'send_item' || $detectedSendItem);
+
+        if ($customerWillSendItem && empty(trim((string) ($effectiveItemDescription ?? '')))) {
             return back()
                 ->withInput()
                 ->withErrors(['item_description' => 'Item description is required for resin preservation orders.']);
@@ -138,8 +149,8 @@ class CheckoutController extends Controller
             'shipping_address' => $validated['shipping_address'],
             'notes' => $validated['notes'] ?? null,
             'customer_will_send_item' => $customerWillSendItem,
-            'item_description' => $validated['item_description'] ?? null,
-            'custom_note' => $validated['custom_note'] ?? null,
+            'item_description' => $effectiveItemDescription,
+            'custom_note' => $effectiveCustomNote,
             'subtotal' => $subtotal,
             'total' => $subtotal,
             'status' => $customerWillSendItem ? 'waiting_for_customer_parcel' : 'pending',
@@ -184,7 +195,8 @@ class CheckoutController extends Controller
     public function confirmation(string $orderNumber): View
     {
         $order = Order::with('items')->where('order_number', $orderNumber)->firstOrFail();
-        $whatsappNumber = config('payment.whatsapp_number', '');
+        $settings = SiteSettings::getSettings();
+        $whatsappNumber = $settings->whatsapp_number ?: config('payment.whatsapp_number', '');
 
         return view('checkout.confirmation', compact('order', 'whatsappNumber'));
     }
@@ -198,6 +210,17 @@ class CheckoutController extends Controller
             ->paginate(10);
 
         return view('orders.my-orders', compact('orders'));
+    }
+
+    public function showMyOrder(Order $order): View
+    {
+        if ((int) $order->user_id !== (int) auth()->id()) {
+            abort(403);
+        }
+
+        $order->load(['items.product.images']);
+
+        return view('orders.show', compact('order'));
     }
 
     public function uploadParcelDetails(Request $request, Order $order): RedirectResponse

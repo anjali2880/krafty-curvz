@@ -147,6 +147,21 @@
                     <button type="button" id="open-customizer-btn" onclick="openCustomizerFromButton(this)" data-product-id="{{ $product->id }}" data-product-name="{{ e($product->name) }}" data-product-price="{{ $product->effective_price }}" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors font-medium">
                         {{ $hasSavedDesign ? 'Edit Your Design' : 'Customize' }}
                     </button>
+                    @if(!empty($existingCustomizationImage))
+                        <a id="preview-design-btn"
+                           href="{{ asset('storage/' . $existingCustomizationImage) }}"
+                           onclick="openDesignPreview(event, this)"
+                           class="inline-flex items-center ml-2 bg-white border border-purple-300 text-purple-700 hover:bg-purple-100 px-5 py-2 rounded-lg transition-colors font-medium">
+                            Preview Design
+                        </a>
+                    @else
+                        <a id="preview-design-btn"
+                           href="#"
+                           onclick="openDesignPreview(event, this)"
+                           class="hidden inline-flex items-center ml-2 bg-white border border-purple-300 text-purple-700 hover:bg-purple-100 px-5 py-2 rounded-lg transition-colors font-medium">
+                            Preview Design
+                        </a>
+                    @endif
                 </div>
             @endif
 
@@ -157,7 +172,7 @@
                 <input type="hidden" name="size_id" id="selected_size_id" value="{{ $product->sizes->count() > 0 ? $product->sizes->first()->id : '' }}">
                 <input type="hidden" name="size_name" id="selected_size_name" value="{{ $product->sizes->count() > 0 ? $product->sizes->first()->name : '' }}">
                 <input type="hidden" name="size_price" id="selected_size_price" value="{{ $product->sizes->count() > 0 ? $product->sizes->first()->price : $product->effective_price }}">
-                <input type="hidden" name="customization_data" id="customization_data_input">
+                <input type="hidden" name="customization_data" id="customization_data_input" value="{{ !empty($existingCustomizationData) ? json_encode($existingCustomizationData) : '' }}">
                 <input type="hidden" name="customization_image" id="customization_image_input" value="{{ $existingCustomizationImage }}">
 
                 @if($showOrderType)
@@ -313,6 +328,21 @@
             </div>
         </div>
     @endif
+</div>
+
+<!-- Design Preview Modal -->
+<div id="design-preview-modal" onclick="if(event.target===this){closeDesignPreview()}" class="hidden fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+    <div class="relative bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-hidden">
+        <button type="button" onclick="closeDesignPreview()" class="absolute top-3 right-0 md:right-2 z-10 bg-white/90 hover:bg-white text-gray-700 hover:text-gray-900 w-9 h-9 rounded-full flex items-center justify-center shadow">
+            <span class="text-xl leading-none">&times;</span>
+        </button>
+        <div class="p-3 bg-gray-50 border-b border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700">Design Preview</h3>
+        </div>
+        <div class="p-3 bg-white flex items-center justify-center">
+            <img id="design-preview-image" src="" alt="Saved design preview" class="max-w-full max-h-[75vh] object-contain rounded">
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -643,6 +673,26 @@ function closeCustomizer() {
     document.getElementById('customizer-modal').classList.add('hidden');
 }
 
+function openDesignPreview(event, linkElement) {
+    if (event) event.preventDefault();
+    const src = linkElement?.getAttribute('href');
+    if (!src || src === '#') return;
+
+    const modal = document.getElementById('design-preview-modal');
+    const img = document.getElementById('design-preview-image');
+    if (!modal || !img) return;
+
+    img.src = src;
+    modal.classList.remove('hidden');
+}
+
+function closeDesignPreview() {
+    const modal = document.getElementById('design-preview-modal');
+    const img = document.getElementById('design-preview-image');
+    if (img) img.src = '';
+    if (modal) modal.classList.add('hidden');
+}
+
 function addTextToCanvas() {
     const text = document.getElementById('custom-text-input').value;
     if (!text.trim()) return;
@@ -686,6 +736,11 @@ function applyFontFamilyToTextObject(textObject, fontFamily) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    const customizationDataInput = document.getElementById('customization_data_input');
+    if (customizationDataInput && !customizationDataInput.value && existingCustomizationData) {
+        customizationDataInput.value = JSON.stringify(existingCustomizationData);
+    }
+
     const fontSelect = document.getElementById('custom-font-family');
     const fontColorSelect = document.getElementById('custom-font-color');
     if (!fontSelect && !fontColorSelect) return;
@@ -720,17 +775,6 @@ function addImageToCanvas() {
     const file = fileInput.files[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        fabric.Image.fromURL(e.target.result, function(img) {
-            img.scaleToWidth(150);
-            img.set({ left: 100, top: 100 });
-            fabricCanvas.add(img);
-            fabricCanvas.setActiveObject(img);
-        });
-    };
-    reader.readAsDataURL(file);
-
     // Also upload to server
     const formData = new FormData();
     formData.append('image', file);
@@ -741,7 +785,34 @@ function addImageToCanvas() {
         body: formData,
         headers: { 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value }
     }).then(r => r.json()).then(data => {
-        if (data.success) console.log('Image uploaded:', data.url);
+        if (data.success && data.url) {
+            fabric.Image.fromURL(data.url, function(img) {
+                img.scaleToWidth(150);
+                img.set({ left: 100, top: 100 });
+                img.set('data', {
+                    ...(img.data || {}),
+                    userUploadedImageUrl: data.url,
+                    userUploadedImagePath: data.path || null,
+                    userUploadedFileName: file.name || null
+                });
+                fabricCanvas.add(img);
+                fabricCanvas.setActiveObject(img);
+                fabricCanvas.renderAll();
+            });
+        }
+    }).catch(() => {
+        // Fallback: still allow user to place image on canvas if upload fails.
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            fabric.Image.fromURL(e.target.result, function(img) {
+                img.scaleToWidth(150);
+                img.set({ left: 100, top: 100 });
+                fabricCanvas.add(img);
+                fabricCanvas.setActiveObject(img);
+                fabricCanvas.renderAll();
+            });
+        };
+        reader.readAsDataURL(file);
     });
 }
 
@@ -758,6 +829,32 @@ function saveDesign() {
     if (Array.isArray(designJson.objects)) {
         designJson.objects = designJson.objects.filter((obj) => !(obj?.data?.isCanvasBaseImage));
     }
+
+    // Save a clean summary for admin order view.
+    const summary = {
+        texts: [],
+        images: []
+    };
+    if (Array.isArray(designJson.objects)) {
+        designJson.objects.forEach((obj) => {
+            if (['i-text', 'text', 'textbox'].includes(obj?.type) && String(obj?.text || '').trim() !== '') {
+                summary.texts.push({
+                    text: obj.text || '',
+                    font: obj.fontFamily || 'Default',
+                    color: obj.fill || '#000000'
+                });
+            }
+            if (obj?.type === 'image' && obj?.data?.userUploadedImageUrl) {
+                summary.images.push({
+                    url: obj.data.userUploadedImageUrl,
+                    path: obj.data.userUploadedImagePath || null,
+                    file_name: obj.data.userUploadedFileName || null
+                });
+            }
+        });
+    }
+    designJson.custom_summary = summary;
+
     const designData = JSON.stringify(designJson);
     const designImage = fabricCanvas.toDataURL({ format: 'png', quality: 1 });
 
@@ -779,6 +876,11 @@ function saveDesign() {
         if (data.success) {
             document.getElementById('customization_data_input').value = designData;
             document.getElementById('customization_image_input').value = data.image_path;
+            const previewBtn = document.getElementById('preview-design-btn');
+            if (previewBtn && data.image_path) {
+                previewBtn.href = '{{ asset('storage') }}/' + data.image_path;
+                previewBtn.classList.remove('hidden');
+            }
             closeCustomizer();
             window.location.href = '{{ route("products.show", $product->slug) }}';
         }

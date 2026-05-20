@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
     Route::get('/order/confirmation/{orderNumber}', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
     Route::get('/my-orders', [CheckoutController::class, 'myOrders'])->name('orders.my');
+    Route::get('/my-orders/{order}', [CheckoutController::class, 'showMyOrder'])->name('orders.show');
     Route::post('/my-orders/{order}/parcel-details', [CheckoutController::class, 'uploadParcelDetails'])->name('orders.parcel-details');
 });
 

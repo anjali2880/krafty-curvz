@@ -1,0 +1,135 @@
+@extends('layouts.app')
+
+@section('title', 'Order Details')
+
+@section('content')
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    @php
+        $statusText = ucwords(str_replace('_', ' ', $order->status));
+        $statusClass = match($order->status) {
+            'completed' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+            'resin_work_in_progress' => 'bg-violet-100 text-violet-700 border-violet-200',
+            'parcel_received' => 'bg-sky-100 text-sky-700 border-sky-200',
+            'parcel_shipped_by_customer' => 'bg-blue-100 text-blue-700 border-blue-200',
+            'waiting_for_customer_parcel' => 'bg-amber-100 text-amber-800 border-amber-200',
+            default => 'bg-gray-100 text-gray-700 border-gray-200',
+        };
+    @endphp
+
+    <div class="relative overflow-hidden rounded-3xl bg-gray-900 text-white p-7 md:p-9 mb-8 shadow-xl border border-gray-800">
+        <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-amber-900/70"></div>
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-white/10 rounded-full"></div>
+        <div class="absolute -bottom-10 left-10 w-32 h-32 bg-amber-300/10 rounded-full"></div>
+        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+            <div>
+                <p class="text-sm text-gray-200">Order Details</p>
+                <h1 class="text-3xl font-bold">#{{ $order->order_number }}</h1>
+                <p class="text-gray-200 mt-1">Placed on {{ $order->created_at->format('d M Y, h:i A') }}</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full border text-sm font-semibold {{ $statusClass }}">{{ $statusText }}</span>
+                <a href="{{ route('orders.my') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 text-white font-medium transition-colors">Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Order Total</p>
+            <p class="text-2xl font-bold text-gray-900 mt-2">&#8377;{{ number_format($order->total, 0) }}</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Items</p>
+            <p class="text-2xl font-bold text-gray-900 mt-2">{{ $order->items->count() }}</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Order Type</p>
+            <p class="text-lg font-semibold text-gray-900 mt-2">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</p>
+        </div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-8">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h2 class="font-semibold text-gray-900">Order Items</h2>
+        </div>
+        <div class="divide-y divide-gray-100">
+            @foreach($order->items as $item)
+                @php
+                    $imagePath = null;
+                    if ($item->is_customized && $item->customization_image) {
+                        $imagePath = asset('storage/' . $item->customization_image);
+                    } elseif ($item->product && $item->product->images->count() > 0) {
+                        $imagePath = asset('storage/' . $item->product->images->first()->image_path);
+                    }
+                @endphp
+                <div class="p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 hover:bg-gray-50/50 transition-colors">
+                    <div class="flex items-center gap-4 min-w-0">
+                        @if($imagePath)
+                            <img src="{{ $imagePath }}" alt="{{ $item->product_name }}" class="w-20 h-20 rounded-lg object-cover border border-gray-200 flex-shrink-0">
+                        @else
+                            <div class="w-20 h-20 rounded-lg bg-gray-100 border border-gray-200 flex-shrink-0"></div>
+                        @endif
+                        <div class="min-w-0">
+                            <p class="font-semibold text-gray-900 truncate">{{ $item->product_name }}</p>
+                            <div class="mt-1 text-sm text-gray-600 space-x-2">
+                                <span>Qty: {{ $item->quantity }}</span>
+                                @if($item->size_name)
+                                    <span>• Size: {{ $item->size_name }}</span>
+                                @endif
+                                @if($item->shape_option)
+                                    <span>• Shape: {{ $item->shape_option }}</span>
+                                @endif
+                            </div>
+                            @if($item->is_customized)
+                                <span class="inline-flex mt-2 px-2 py-1 rounded-md bg-purple-100 text-purple-700 text-xs font-semibold">Customized</span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="text-left lg:text-right">
+                        <p class="text-xs uppercase tracking-wide text-gray-500">Unit Price</p>
+                        <p class="font-semibold text-gray-900">&#8377;{{ number_format($item->price, 0) }}</p>
+                        <p class="text-xs uppercase tracking-wide text-gray-500 mt-2">Line Total</p>
+                        <p class="text-lg font-bold text-gray-900">&#8377;{{ number_format($item->total, 0) }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <h3 class="font-semibold text-gray-900 mb-4">Customer Details</h3>
+            <div class="space-y-2 text-sm text-gray-700">
+                <p><span class="font-medium text-gray-900">Name:</span> {{ $order->customer_name }}</p>
+                <p><span class="font-medium text-gray-900">Email:</span> {{ $order->customer_email }}</p>
+                <p><span class="font-medium text-gray-900">Phone:</span> {{ $order->customer_phone }}</p>
+                <p><span class="font-medium text-gray-900">Shipping Address:</span> {{ $order->shipping_address }}</p>
+                @if($order->notes)
+                    <p><span class="font-medium text-gray-900">Notes:</span> {{ $order->notes }}</p>
+                @endif
+            </div>
+        </div>
+
+        @if($order->customer_will_send_item)
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900 mb-4">Parcel Details</h3>
+                <div class="space-y-2 text-sm text-gray-700">
+                    <p><span class="font-medium text-gray-900">Item Description:</span> {{ $order->item_description ?: 'Not provided' }}</p>
+                    @if($order->custom_note)
+                        <p><span class="font-medium text-gray-900">Custom Note:</span> {{ $order->custom_note }}</p>
+                    @endif
+                    @if($order->courier_agency_name)
+                        <p><span class="font-medium text-gray-900">Courier Agency:</span> {{ $order->courier_agency_name }}</p>
+                    @endif
+                    @if($order->tracking_number)
+                        <p><span class="font-medium text-gray-900">Tracking Number:</span> {{ $order->tracking_number }}</p>
+                    @endif
+                    @if($order->parcel_slip_path)
+                        <p><span class="font-medium text-gray-900">Parcel Slip:</span> <a class="text-amber-700 hover:text-amber-800 hover:underline" href="{{ asset('storage/' . $order->parcel_slip_path) }}" target="_blank">View Uploaded Slip</a></p>
+                    @endif
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
+@endsection

@@ -111,13 +111,139 @@
                                     <p class="text-sm text-gray-500">Shape: {{ $item->shape_option }}</p>
                                 @endif
                                 <p class="text-sm text-gray-500">&#8377;{{ number_format($item->price, 0) }} x {{ $item->quantity }}</p>
-                                @if($item->is_customized)
+                                @php
+                                    $hasCustomization = $item->is_customized || !empty($item->customization_data) || !empty($item->customization_image);
+                                @endphp
+                                @if($hasCustomization)
                                     <div class="mt-2">
                                         <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">Customized</span>
                                         @if($item->customization_image)
                                             <a href="{{ asset('storage/' . $item->customization_image) }}" target="_blank" class="text-xs text-amber-700 ml-2 hover:underline">View Full Preview</a>
                                         @endif
                                     </div>
+                                    @php
+                                        $designObjects = [];
+                                        if (is_array($item->customization_data)) {
+                                            $designObjects = $item->customization_data['objects'] ?? [];
+                                        } elseif (is_string($item->customization_data) && trim($item->customization_data) !== '') {
+                                            $decodedData = json_decode($item->customization_data, true);
+                                            $designObjects = is_array($decodedData) ? ($decodedData['objects'] ?? []) : [];
+                                        }
+                                        $customSummary = is_array($item->customization_data) ? ($item->customization_data['custom_summary'] ?? null) : null;
+
+                                        $customTexts = collect($customSummary['texts'] ?? [])
+                                            ->filter(fn ($row) => is_array($row) && trim((string) ($row['text'] ?? '')) !== '')
+                                            ->values();
+
+                                        if ($customTexts->count() === 0) {
+                                            $customTexts = collect($designObjects)
+                                                ->filter(fn ($obj) => in_array(($obj['type'] ?? ''), ['i-text', 'text', 'textbox'], true))
+                                                ->map(function ($obj) {
+                                                    $styleColor = null;
+                                                    if (isset($obj['styles']) && is_array($obj['styles'])) {
+                                                        foreach ($obj['styles'] as $lineStyles) {
+                                                            if (!is_array($lineStyles)) {
+                                                                continue;
+                                                            }
+                                                            foreach ($lineStyles as $charStyle) {
+                                                                if (is_array($charStyle) && !empty($charStyle['fill'])) {
+                                                                    $styleColor = $charStyle['fill'];
+                                                                    break 2;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    return [
+                                                        'text' => $obj['text'] ?? '',
+                                                        'font' => $obj['fontFamily'] ?? 'Default',
+                                                        'color' => $obj['fill'] ?? $styleColor ?? '#000000',
+                                                    ];
+                                                })
+                                                ->filter(fn ($row) => trim((string) $row['text']) !== '')
+                                                ->values();
+                                        }
+
+                                        $summaryImages = collect($customSummary['images'] ?? [])
+                                            ->filter(fn ($row) => is_array($row) && !empty($row['url']))
+                                            ->values();
+
+                                        $imageObjects = collect($designObjects)
+                                            ->filter(fn ($obj) => ($obj['type'] ?? '') === 'image')
+                                            ->filter(fn ($obj) => !((bool) data_get($obj, 'data.isCanvasBaseImage', false)))
+                                            ->values();
+                                    @endphp
+                                    @if($customTexts->count() > 0 || $summaryImages->count() > 0 || $imageObjects->count() > 0 || !empty($item->customization_image))
+                                        <div class="mt-3 space-y-3">
+                                            <div class="p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs text-purple-900">
+                                                <p class="font-semibold mb-2">Custom Text Added by Customer</p>
+                                                @if($customTexts->count() > 0)
+                                                    <div class="space-y-2">
+                                                        @foreach($customTexts as $idx => $textData)
+                                                            <div class="bg-white border border-purple-200 rounded p-2">
+                                                                <p><span class="font-medium">Text {{ $idx + 1 }}:</span> "{{ $textData['text'] }}"</p>
+                                                                <p><span class="font-medium">Font Style:</span> {{ $textData['font'] }}</p>
+                                                                <p class="flex items-center gap-2">
+                                                                    <span class="font-medium">Font Color:</span>
+                                                                    <span>{{ $textData['color'] }}</span>
+                                                                    <span class="inline-block w-4 h-4 rounded border border-gray-300" style="background-color: {{ $textData['color'] }};"></span>
+                                                                </p>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    <p>No custom text data found for this design.</p>
+                                                @endif
+                                            </div>
+
+                                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900">
+                                                <p class="font-semibold mb-2">Customer Uploaded Images</p>
+                                                @if($summaryImages->count() > 0)
+                                                    <div class="space-y-3">
+                                                        @foreach($summaryImages as $index => $imgData)
+                                                            @php
+                                                                $imageSrc = $imgData['url'] ?? null;
+                                                            @endphp
+                                                            <div class="bg-white border border-blue-200 rounded p-2">
+                                                                <p class="font-medium mb-2">Image {{ $index + 1 }}</p>
+                                                                @if(is_string($imageSrc) && trim($imageSrc) !== '')
+                                                                    <img src="{{ $imageSrc }}" alt="Customer uploaded image {{ $index + 1 }}" class="w-20 h-20 object-cover rounded border border-gray-200 mb-2">
+                                                                    <a href="{{ $imageSrc }}" target="_blank" download="customer-image-{{ $order->order_number }}-{{ $item->id }}-{{ $index + 1 }}" class="text-amber-700 hover:underline">
+                                                                        Download Image
+                                                                    </a>
+                                                                @else
+                                                                    <span>-</span>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @elseif($imageObjects->count() > 0)
+                                                    <div class="space-y-3">
+                                                        @foreach($imageObjects as $index => $imgObj)
+                                                            @php
+                                                                $imageSrc = $imgObj['src'] ?? null;
+                                                            @endphp
+                                                            <div class="bg-white border border-blue-200 rounded p-2">
+                                                                <p class="font-medium mb-2">Image {{ $index + 1 }}</p>
+                                                                @if(is_string($imageSrc) && trim($imageSrc) !== '')
+                                                                    <img src="{{ $imageSrc }}" alt="Customer uploaded image {{ $index + 1 }}" class="w-20 h-20 object-cover rounded border border-gray-200 mb-2">
+                                                                    <a href="{{ $imageSrc }}" target="_blank" download="customer-image-{{ $order->order_number }}-{{ $item->id }}-{{ $index + 1 }}" class="text-amber-700 hover:underline">
+                                                                        Download Image
+                                                                    </a>
+                                                                @else
+                                                                    <span>-</span>
+                                                                @endif
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @elseif(!empty($item->customization_image))
+                                                    <p>Original uploaded image not available in saved data for this item.</p>
+                                                @else
+                                                    <p>No uploaded image data found for this design.</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
                                     @if($item->customization_data)
                                         <details class="mt-2">
                                             <summary class="text-xs text-gray-500 cursor-pointer hover:text-gray-700">View Customization Data</summary>
