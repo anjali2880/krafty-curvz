@@ -23,7 +23,7 @@
                 <option value="shipped" {{ request('status') == 'shipped' ? 'selected' : '' }}>Shipped</option>
                 <option value="delivered" {{ request('status') == 'delivered' ? 'selected' : '' }}>Delivered</option>
                 <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                <option value="waiting_for_customer_parcel" {{ request('status') == 'waiting_for_customer_parcel' ? 'selected' : '' }}>Waiting for Customer Parcel</option>
+                <option value="waiting_for_customer_parcel" {{ request('status') == 'waiting_for_customer_parcel' ? 'selected' : '' }}>Awaiting Parcel</option>
                 <option value="parcel_shipped_by_customer" {{ request('status') == 'parcel_shipped_by_customer' ? 'selected' : '' }}>Parcel Shipped by Customer</option>
                 <option value="parcel_received" {{ request('status') == 'parcel_received' ? 'selected' : '' }}>Parcel Received</option>
                 <option value="resin_work_in_progress" {{ request('status') == 'resin_work_in_progress' ? 'selected' : '' }}>Resin Work In Progress</option>
@@ -54,6 +54,7 @@
                 @foreach($orders as $order)
                     @php
                         $statusColors = ['pending' => 'bg-yellow-100 text-yellow-700', 'processing' => 'bg-blue-100 text-blue-700', 'shipped' => 'bg-purple-100 text-purple-700', 'delivered' => 'bg-green-100 text-green-700', 'cancelled' => 'bg-red-100 text-red-700', 'waiting_for_customer_parcel' => 'bg-orange-100 text-orange-700', 'parcel_shipped_by_customer' => 'bg-sky-100 text-sky-700', 'parcel_received' => 'bg-indigo-100 text-indigo-700', 'resin_work_in_progress' => 'bg-violet-100 text-violet-700', 'completed' => 'bg-emerald-100 text-emerald-700'];
+                        $statusLabels = ['waiting_for_customer_parcel' => 'Awaiting Parcel'];
                         $paymentColors = ['unpaid' => 'bg-red-100 text-red-700', 'paid' => 'bg-green-100 text-green-700', 'refunded' => 'bg-gray-100 text-gray-700'];
                     @endphp
                     <tr class="hover:bg-gray-50">
@@ -71,7 +72,7 @@
                         </td>
                         <td class="px-6 py-4 text-sm font-medium">&#8377;{{ number_format($order->total, 0) }}</td>
                         <td class="px-6 py-4">
-                            <span class="px-2 py-1 text-xs rounded-full {{ $statusColors[$order->status] ?? '' }}">{{ ucwords(str_replace('_', ' ', $order->status)) }}</span>
+                            <span class="px-2 py-1 text-xs rounded-full {{ $statusColors[$order->status] ?? '' }}">{{ $statusLabels[$order->status] ?? ucwords(str_replace('_', ' ', $order->status)) }}</span>
                         </td>
                         <td class="px-6 py-4">
                             <span class="px-2 py-1 text-xs rounded-full {{ $paymentColors[$order->payment_status] ?? '' }}">{{ ucfirst($order->payment_status) }}</span>

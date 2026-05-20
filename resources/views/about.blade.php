@@ -70,38 +70,48 @@
 
 <section class="py-16 bg-[#f5f2ed]">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-[#5f3c2a]">Meet Our Artists</h2>
-            <div class="w-20 h-0.5 bg-amber-500 mx-auto mt-4"></div>
+        <div class="text-center mb-12 max-w-2xl mx-auto">
+            <p class="text-sm uppercase tracking-[0.25em] text-amber-700 font-semibold">The Team</p>
+            <h2 class="text-4xl md:text-5xl font-bold text-[#5f3c2a] mt-3">Meet Our Artists</h2>
+            <p class="text-gray-600 mt-4">The hands and hearts behind every custom resin piece, candle, and craft detail.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white rounded-xl shadow-soft overflow-hidden text-center">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80" alt="Artist 1" class="w-full h-72 object-cover">
-                <div class="p-6">
-                    <h3 class="text-3xl font-semibold text-[#5f3c2a]">Anjali Mehta</h3>
-                    <p class="text-amber-600 font-semibold mt-1">Founder</p>
-                    <p class="text-gray-600 mt-4">Specializes in resin trays and ocean-inspired handcrafted designs.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
+                <div class="relative w-full h-80 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&h=900&q=80" alt="Artist 1" class="w-full h-full object-cover">
+                    <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"></div>
                 </div>
-            </div>
+                <div class="p-6 flex-1">
+                    <div class="inline-flex px-3 py-1 text-xs font-semibold tracking-wide uppercase bg-amber-100 text-amber-800">Founder</div>
+                    <h3 class="text-2xl font-bold text-[#5f3c2a] mt-4">Anjali Mehta</h3>
+                    <p class="text-gray-600 mt-3 leading-7">Specializes in resin trays and ocean-inspired handcrafted designs.</p>
+                </div>
+            </article>
 
-            <div class="bg-white rounded-xl shadow-soft overflow-hidden text-center">
-                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80" alt="Artist 2" class="w-full h-72 object-cover">
-                <div class="p-6">
-                    <h3 class="text-3xl font-semibold text-[#5f3c2a]">Shubham Mehta</h3>
-                    <p class="text-amber-600 font-semibold mt-1">Resin Specialist</p>
-                    <p class="text-gray-600 mt-4">Creates layered geode styles and signature finish effects.</p>
+            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
+                <div class="relative w-full h-80 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&h=900&q=80" alt="Artist 2" class="w-full h-full object-cover">
+                    <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"></div>
                 </div>
-            </div>
+                <div class="p-6 flex-1">
+                    <div class="inline-flex px-3 py-1 text-xs font-semibold tracking-wide uppercase bg-amber-100 text-amber-800">Resin Specialist</div>
+                    <h3 class="text-2xl font-bold text-[#5f3c2a] mt-4">Shubham Mehta</h3>
+                    <p class="text-gray-600 mt-3 leading-7">Creates layered geode styles and signature finish effects.</p>
+                </div>
+            </article>
 
-            <div class="bg-white rounded-xl shadow-soft overflow-hidden text-center">
-                <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80" alt="Artist 3" class="w-full h-72 object-cover">
-                <div class="p-6">
-                    <h3 class="text-3xl font-semibold text-[#5f3c2a]">Pallavi Mehta</h3>
-                    <p class="text-amber-600 font-semibold mt-1">Design Innovator</p>
-                    <p class="text-gray-600 mt-4">Brings modern concepts into candles and floral craft collections.</p>
+            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
+                <div class="relative w-full h-80 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&h=900&q=80" alt="Artist 3" class="w-full h-full object-cover">
+                    <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"></div>
                 </div>
-            </div>
+                <div class="p-6 flex-1">
+                    <div class="inline-flex px-3 py-1 text-xs font-semibold tracking-wide uppercase bg-amber-100 text-amber-800">Design Innovator</div>
+                    <h3 class="text-2xl font-bold text-[#5f3c2a] mt-4">Pallavi Mehta</h3>
+                    <p class="text-gray-600 mt-3 leading-7">Brings modern concepts into candles and floral craft collections.</p>
+                </div>
+            </article>
         </div>
     </div>
 </section>

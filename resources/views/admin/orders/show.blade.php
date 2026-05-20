@@ -279,7 +279,7 @@
                             <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
                             <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
                             <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                            <option value="waiting_for_customer_parcel" {{ $order->status == 'waiting_for_customer_parcel' ? 'selected' : '' }}>Waiting for Customer Parcel</option>
+                            <option value="waiting_for_customer_parcel" {{ $order->status == 'waiting_for_customer_parcel' ? 'selected' : '' }}>Awaiting Parcel</option>
                             <option value="parcel_shipped_by_customer" {{ $order->status == 'parcel_shipped_by_customer' ? 'selected' : '' }}>Parcel Shipped by Customer</option>
                             <option value="parcel_received" {{ $order->status == 'parcel_received' ? 'selected' : '' }}>Parcel Received</option>
                             <option value="resin_work_in_progress" {{ $order->status == 'resin_work_in_progress' ? 'selected' : '' }}>Resin Work In Progress</option>
