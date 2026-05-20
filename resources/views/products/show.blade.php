@@ -7,6 +7,9 @@
 @section('og_image', $product->primary_image_url)
 
 @push('head')
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Cinzel:wght@400;600&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Indie+Flower&family=Lobster&family=Merriweather:wght@400;700&family=Montserrat:wght@400;600&family=Oswald:wght@400;600&family=Pacifico&family=Playfair+Display:wght@400;600&family=Poppins:wght@400;600&family=Raleway:wght@400;600&family=Roboto:wght@400;500&family=Satisfy&display=swap" rel="stylesheet">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -141,8 +144,8 @@
                         <span class="font-semibold text-purple-700">Customizable Product</span>
                     </div>
                     <p class="text-sm text-purple-600 mb-3">Customize this product with your own text, images, and design!</p>
-                    <button type="button" id="open-customizer-btn" data-product-id="{{ $product->id }}" data-product-name="{{ json_encode($product->name) }}" data-product-price="{{ $product->effective_price }}" class="{{ $isOutOfStock ? 'bg-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700' }} text-white px-6 py-2 rounded-lg transition-colors font-medium" {{ $isOutOfStock ? 'disabled' : '' }}>
-                        {{ $isOutOfStock ? 'Out of Stock' : ($hasSavedDesign ? 'Edit Your Design' : 'Customize') }}
+                    <button type="button" id="open-customizer-btn" onclick="openCustomizerFromButton(this)" data-product-id="{{ $product->id }}" data-product-name="{{ e($product->name) }}" data-product-price="{{ $product->effective_price }}" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors font-medium">
+                        {{ $hasSavedDesign ? 'Edit Your Design' : 'Customize' }}
                     </button>
                 </div>
             @endif
@@ -233,6 +236,37 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Add Custom Text</label>
                                 <input type="text" id="custom-text-input" placeholder="Enter your text..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
                                 <button onclick="addTextToCanvas()" class="mt-2 bg-amber-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-amber-700">Add Text</button>
+                                <div class="mt-3 flex flex-col sm:flex-row gap-3">
+                                    <div class="flex-1 min-w-0">
+                                        <label for="custom-font-family" class="block text-sm font-medium text-gray-700 mb-1">Font Style</label>
+                                        <select id="custom-font-family" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                            <option value="Arial">Arial (Universal)</option>
+                                            <option value="Roboto">Roboto</option>
+                                            <option value="Poppins">Poppins</option>
+                                            <option value="Montserrat">Montserrat</option>
+                                            <option value="Raleway">Raleway</option>
+                                            <option value="Merriweather">Merriweather</option>
+                                            <option value="Playfair Display">Playfair Display</option>
+                                            <option value="Cinzel">Cinzel</option>
+                                            <option value="Oswald">Oswald</option>
+                                            <option value="Bebas Neue">Bebas Neue</option>
+                                            <option value="Anton">Anton</option>
+                                            <option value="Dancing Script">Dancing Script</option>
+                                            <option value="Pacifico">Pacifico</option>
+                                            <option value="Lobster">Lobster</option>
+                                            <option value="Great Vibes">Great Vibes</option>
+                                            <option value="Satisfy">Satisfy</option>
+                                            <option value="Indie Flower">Indie Flower</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <label for="custom-font-color" class="block text-sm font-medium text-gray-700 mb-1">Font Color</label>
+                                        <select id="custom-font-color" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                                            <option value="#000000">Black</option>
+                                            <option value="#D4AF37">Gold</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Upload Image -->
@@ -273,8 +307,8 @@
         <div class="mt-16">
             <h2 class="text-2xl font-bold mb-6">You May Also Like</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($relatedProducts as $product)
-                    @include('partials.product-card', ['product' => $product])
+                @foreach($relatedProducts as $relatedProduct)
+                    @include('partials.product-card', ['product' => $relatedProduct])
                 @endforeach
             </div>
         </div>
@@ -284,6 +318,25 @@
 
 @push('scripts')
 <script>
+if (typeof window.openCustomizerFromButton !== 'function') {
+    window.openCustomizerFromButton = function(button) {
+        if (!button) return;
+        const productId = button.getAttribute('data-product-id');
+        const productName = button.getAttribute('data-product-name') || '';
+        const productPrice = button.getAttribute('data-product-price');
+
+        if (typeof window.openCustomizer === 'function') {
+            window.openCustomizer(productId, productName, productPrice);
+            return;
+        }
+
+        const modal = document.getElementById('customizer-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    };
+}
+
 function updateQty(delta) {
     const input = document.getElementById('qty-input');
     if (!input) return;
@@ -298,6 +351,39 @@ function updateQty(delta) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    const formatPrice = (value) => {
+        const num = Number(value || 0);
+        return Number.isFinite(num) ? num.toLocaleString('en-IN', { maximumFractionDigits: 0 }) : '0';
+    };
+
+    const sizeSelect = document.getElementById('size-select');
+    if (sizeSelect) {
+        sizeSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const sizeId = this.value;
+            const sizePrice = selectedOption.getAttribute('data-price');
+            const sizeName = selectedOption.getAttribute('data-name');
+
+            const sizeIdInput = document.getElementById('selected_size_id');
+            const sizePriceInput = document.getElementById('selected_size_price');
+            const sizeNameInput = document.getElementById('selected_size_name');
+
+            if (sizeIdInput) sizeIdInput.value = sizeId;
+            if (sizePriceInput) sizePriceInput.value = sizePrice;
+            if (sizeNameInput) sizeNameInput.value = sizeName;
+
+            const displayPrice = document.getElementById('display-price');
+            if (displayPrice) {
+                displayPrice.textContent = formatPrice(sizePrice);
+            }
+
+            const mainPrice = document.getElementById('main-price');
+            if (mainPrice) {
+                mainPrice.textContent = '₹' + formatPrice(sizePrice);
+            }
+        });
+    }
+
     const qtyInput = document.getElementById('qty-input');
     if (!qtyInput) return;
 
@@ -350,42 +436,18 @@ const canvasImages = @json(
 
 // Handle size selection
 document.addEventListener('DOMContentLoaded', function() {
-    const sizeSelect = document.getElementById('size-select');
-    if (sizeSelect) {
-        sizeSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const sizeId = this.value;
-            const sizePrice = selectedOption.getAttribute('data-price');
-            const sizeName = selectedOption.getAttribute('data-name');
-
-            document.getElementById('selected_size_id').value = sizeId;
-            document.getElementById('selected_size_price').value = sizePrice;
-            document.getElementById('selected_size_name').value = sizeName;
-            document.getElementById('display-price').textContent = number_format(sizePrice, 0);
-
-            // Update main price display
-            const mainPrice = document.getElementById('main-price');
-            if (mainPrice) {
-                mainPrice.textContent = '₹' + number_format(sizePrice, 0);
-            }
-        });
-    }
-
-    // Handle customizer button click
-    const customizerBtn = document.getElementById('open-customizer-btn');
-    if (customizerBtn) {
-        customizerBtn.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            const productName = JSON.parse(this.getAttribute('data-product-name'));
-            const productPrice = this.getAttribute('data-product-price');
-            openCustomizer(productId, productName, productPrice);
-        });
-    }
-
 });
 
 function number_format(number, decimals) {
     return parseFloat(number).toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function openCustomizerFromButton(button) {
+    if (!button) return;
+    const productId = button.getAttribute('data-product-id');
+    const productName = button.getAttribute('data-product-name') || '';
+    const productPrice = button.getAttribute('data-product-price');
+    openCustomizer(productId, productName, productPrice);
 }
 
 function openCustomizer(productId, productName, price) {
@@ -584,18 +646,74 @@ function closeCustomizer() {
 function addTextToCanvas() {
     const text = document.getElementById('custom-text-input').value;
     if (!text.trim()) return;
-
-    const textObj = new fabric.IText(text, {
-        left: 100,
-        top: 100,
-        fontSize: 24,
-        fill: '#000000',
-        fontFamily: 'Arial',
+    const selectedFont = document.getElementById('custom-font-family')?.value || 'Arial';
+    const selectedColor = document.getElementById('custom-font-color')?.value || '#000000';
+    loadCanvasFont(selectedFont).then(function() {
+        const textObj = new fabric.IText(text, {
+            left: 100,
+            top: 100,
+            fontSize: 24,
+            fill: selectedColor,
+            fontFamily: selectedFont,
+        });
+        fabricCanvas.add(textObj);
+        fabricCanvas.setActiveObject(textObj);
+        fabricCanvas.renderAll();
+        document.getElementById('custom-text-input').value = '';
     });
-    fabricCanvas.add(textObj);
-    fabricCanvas.setActiveObject(textObj);
-    document.getElementById('custom-text-input').value = '';
 }
+
+function loadCanvasFont(fontFamily) {
+    if (!fontFamily || !document.fonts || typeof document.fonts.load !== 'function') {
+        return Promise.resolve();
+    }
+
+    return document.fonts.load('24px "' + fontFamily + '"')
+        .then(function() { return document.fonts.ready; })
+        .catch(function() { return Promise.resolve(); });
+}
+
+function applyFontFamilyToTextObject(textObject, fontFamily) {
+    if (!textObject) return;
+    textObject.set('fontFamily', fontFamily);
+    textObject.set('dirty', true);
+    if (typeof textObject.initDimensions === 'function') {
+        textObject.initDimensions();
+    }
+    if (typeof textObject.setCoords === 'function') {
+        textObject.setCoords();
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const fontSelect = document.getElementById('custom-font-family');
+    const fontColorSelect = document.getElementById('custom-font-color');
+    if (!fontSelect && !fontColorSelect) return;
+
+    if (fontSelect) {
+        fontSelect.addEventListener('change', function() {
+            if (!fabricCanvas) return;
+            const active = fabricCanvas.getActiveObject();
+            if (!active || (active.type !== 'i-text' && active.type !== 'text' && active.type !== 'textbox')) return;
+            const nextFont = this.value || 'Arial';
+            loadCanvasFont(nextFont).then(function() {
+                applyFontFamilyToTextObject(active, nextFont);
+                fabricCanvas.requestRenderAll();
+            });
+        });
+    }
+
+    if (fontColorSelect) {
+        fontColorSelect.addEventListener('change', function() {
+            if (!fabricCanvas) return;
+            const active = fabricCanvas.getActiveObject();
+            if (!active || active.type !== 'i-text') return;
+
+            active.set('fill', this.value || '#000000');
+            fabricCanvas.renderAll();
+        });
+    }
+});
 
 function addImageToCanvas() {
     const fileInput = document.getElementById('custom-image-input');

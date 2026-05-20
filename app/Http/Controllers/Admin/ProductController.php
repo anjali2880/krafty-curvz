@@ -97,6 +97,9 @@ class ProductController extends Controller
             'shape_options.*' => 'nullable|string|max:50',
             'color_options' => 'nullable|array',
             'color_options.*' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
+        ], [
+            'images.*.max' => 'Product image size is too large. Maximum allowed size is 2MB.',
+            'custom_images.*.max' => 'Customizable product image size is too large. Maximum allowed size is 2MB.',
         ]);
 
         if (empty($validated['slug'])) {
@@ -240,6 +243,9 @@ class ProductController extends Controller
             'shape_options.*' => 'nullable|string|max:50',
             'color_options' => 'nullable|array',
             'color_options.*' => ['nullable', 'regex:/^#([A-Fa-f0-9]{6})$/'],
+        ], [
+            'images.*.max' => 'Product image size is too large. Maximum allowed size is 2MB.',
+            'custom_images.*.max' => 'Customizable product image size is too large. Maximum allowed size is 2MB.',
         ]);
 
         unset($validated['slug']);
