@@ -22,6 +22,7 @@ class SiteSettingsController extends Controller
         $validated = $request->validate([
             'site_name' => 'required|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'footer_logo' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
             'favicon' => 'nullable|image|mimes:ico,png,jpg,webp|max:512',
             'banner_background' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'contact_email' => 'nullable|email|max:255',
@@ -44,6 +45,13 @@ class SiteSettingsController extends Controller
                 Storage::disk('public')->delete($settings->logo);
             }
             $validated['logo'] = $request->file('logo')->store('settings', 'public');
+        }
+
+        if ($request->hasFile('footer_logo')) {
+            if ($settings->footer_logo) {
+                Storage::disk('public')->delete($settings->footer_logo);
+            }
+            $validated['footer_logo'] = $request->file('footer_logo')->store('settings', 'public');
         }
 
         if ($request->hasFile('favicon')) {

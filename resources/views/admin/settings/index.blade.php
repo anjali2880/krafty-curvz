@@ -44,6 +44,17 @@
                             @error('logo') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Footer Logo</label>
+                            @if($settings->footer_logo)
+                                <div class="mb-2">
+                                    <img src="{{ asset('storage/' . $settings->footer_logo) }}" alt="Footer Logo" class="h-12 object-contain">
+                                </div>
+                            @endif
+                            <input type="file" name="footer_logo" accept="image/*" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                            <p class="text-xs text-gray-500 mt-1">Used in website footer brand section.</p>
+                            @error('footer_logo') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Favicon</label>
                             @if($settings->favicon)
                                 <div class="mb-2">

@@ -10,6 +10,7 @@ class SiteSettings extends Model
         'site_name',
         'show_site_name',
         'logo',
+        'footer_logo',
         'favicon',
         'banner_background',
         'contact_email',

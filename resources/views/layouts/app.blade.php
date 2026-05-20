@@ -166,6 +166,9 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
                 <!-- Brand Section -->
                 <div class="space-y-4">
+                    @if($siteSettings->footer_logo)
+                        <img src="{{ asset('storage/' . $siteSettings->footer_logo) }}" alt="{{ $siteSettings->site_name }} footer logo" class="h-14 object-contain">
+                    @endif
                     <h3 class="text-2xl font-display font-bold text-white">{{ $siteSettings->site_name }}</h3>
                     <p class="text-neutral-400 leading-relaxed">{{ $siteSettings->footer_text ?? 'Handcrafted resin products made with love. Each piece is unique and crafted with care.' }}</p>
                     <div class="flex space-x-4">
