@@ -21,15 +21,15 @@
         <div>
             <h2 class="text-4xl font-bold text-[#5f3c2a] mb-6">Our Story</h2>
             <div class="space-y-4 text-[#4a4a4a] leading-8">
-                <p>{{ $siteSettings->site_name ?? 'Krafty Curvz' }} started as a small passion project and quickly became a full creative studio for handmade resin products, scented candles, and pipe cleaner crafts.</p>
-                <p>From custom gifts to statement decor pieces, we focus on details, quality, and designs that feel personal and memorable.</p>
-                <p>Every product is crafted with care to bring warmth, beauty, and joy to your homes and special occasions.</p>
+                <p>{{ $siteSettings->site_name ?? 'Krafty Curvz' }} as a small passion project, driven by a love for creativity and handmade artistry. What started with a few unique creations soon grew into a full creative studio specializing in <b>handmade resin products, scented candles, and pipe cleaner crafts.</b></p>
+                <p>From personalized gifts that preserve special memories to statement décor pieces that add charm to any space, every creation is thoughtfully designed with attention to detail, quality, and individuality.</p>
+                <p>At Krafty Curvz, we believe handmade products carry a story of their own. That’s why each piece is crafted with care, creativity, and love — bringing <b>warmth, beauty, and joy</b> to your homes, celebrations, and life’s most special moments.</p>
             </div>
         </div>
 
         <div class="rounded-2xl overflow-hidden shadow-large border border-white/60 bg-white">
             <img
-                src="https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?auto=format&fit=crop&w=1400&q=80"
+                src="/images/ourstory.png"
                 alt="Resin artwork"
                 class="w-full h-[420px] object-cover"
             >
@@ -58,7 +58,7 @@
                     <p class="text-gray-600">We focus on responsible materials and thoughtful production choices.</p>
                 </div>
 
-                <div class="text-center p-6 rounded-xl border border-amber-100 shadow-soft bg-white">
+                <div class="text-center p-6 rounded-xl hover:bg-amber-50/40 transition-colors duration-300">
                     <div class="text-3xl mb-3">🤲</div>
                     <h3 class="text-2xl font-semibold text-[#5f3c2a] mb-3">Handcrafted Quality</h3>
                     <p class="text-gray-600">Every order gets personal attention from our skilled craft team.</p>
@@ -77,9 +77,9 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
+            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden rounded-xl transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
                 <div class="relative w-full h-80 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&h=900&q=80" alt="Artist 1" class="w-full h-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&crop=faces&w=900&h=900&q=80" alt="Artist 1" class="block w-full h-full object-cover object-center">
                     <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"></div>
                 </div>
                 <div class="p-6 flex-1">
@@ -89,9 +89,9 @@
                 </div>
             </article>
 
-            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
+            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden rounded-xl transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
                 <div class="relative w-full h-80 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&h=900&q=80" alt="Artist 2" class="w-full h-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&crop=faces&w=900&h=900&q=80" alt="Artist 2" class="block w-full h-full object-cover object-center">
                     <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"></div>
                 </div>
                 <div class="p-6 flex-1">
@@ -101,9 +101,9 @@
                 </div>
             </article>
 
-            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
+            <article class="group h-full bg-white border border-amber-100 shadow-soft overflow-hidden rounded-xl transition-all duration-300 hover:shadow-large hover:-translate-y-1 flex flex-col">
                 <div class="relative w-full h-80 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&h=900&q=80" alt="Artist 3" class="w-full h-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&crop=faces&w=900&h=900&q=80" alt="Artist 3" class="block w-full h-full object-cover object-center">
                     <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/35 to-transparent"></div>
                 </div>
                 <div class="p-6 flex-1">
