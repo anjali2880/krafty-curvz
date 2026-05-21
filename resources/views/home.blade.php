@@ -5,22 +5,30 @@
 @section('content')
 <!-- Hero Section -->
 <section
-    class="py-20 {{ $siteSettings->banner_background ? 'bg-cover bg-center bg-no-repeat relative' : 'bg-gray-100' }}"
+    class="relative flex items-center py-20 md:py-24 min-h-[420px] md:min-h-[540px] {{ $siteSettings->banner_background ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
     @if($siteSettings->banner_background)
-        style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.65), rgba(20, 24, 32, 0.45)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
+        style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
     @endif
 >
+    @if($siteSettings->banner_background)
+        <div class="absolute inset-0 bg-gradient-to-b from-black/25 to-black/45"></div>
+    @endif
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl font-bold {{ $siteSettings->banner_background ? 'text-white' : 'text-gray-900' }} mb-4">
-                Welcome to {{ $siteSettings->site_name ?? 'Krafty Curvz' }}
-            </h1>
-            <p class="text-lg {{ $siteSettings->banner_background ? 'text-white/90' : 'text-gray-600' }} max-w-2xl mx-auto mb-8">
-                Discover our beautiful collection of handmade resin art pieces, crafted with love and attention to detail.
+        <div class="text-center kc-hero-fade relative">
+            <p class="inline-flex items-center px-4 py-1 rounded-full border border-white/25 bg-white/5 text-xs sm:text-sm uppercase tracking-[0.22em] {{ $siteSettings->banner_background ? 'text-white/90' : 'text-gray-700' }} font-semibold">
+                Handmade. Personal. Timeless.
             </p>
-            <a href="{{ route('products.index') }}" class="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors">
-                Shop Now
-            </a>
+            <h1 class="mt-5 text-4xl md:text-6xl font-bold leading-tight {{ $siteSettings->banner_background ? 'text-white' : 'text-gray-900' }}" style="font-family: 'Cormorant Garamond', serif;">
+                Handcrafted Resin Art That Preserves Your Precious Memories
+            </h1>
+            <p class="mt-5 text-lg md:text-xl {{ $siteSettings->banner_background ? 'text-white/90' : 'text-gray-600' }} max-w-3xl mx-auto" style="font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';">
+                Personalized keepsakes, gifts, and decor crafted with care. From custom name pieces to resin preservation, we turn moments into art.
+            </p>
+            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors">
+                    Shop Collection
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -113,12 +121,17 @@
 @endif
 
 <!-- CTA Section -->
-<section class="py-20 bg-amber-600">
+<section
+    class="relative py-20 bg-cover bg-center bg-no-repeat"
+    style="background-image: url('{{ asset('images/ourstory.png') }}');"
+>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/55 to-black/65"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="relative">
         <h2 class="text-3xl font-bold text-white mb-4">
             Looking for something custom?
         </h2>
-        <p class="text-xl text-amber-100 mb-8 max-w-2xl mx-auto">
+        <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             We create personalized resin pieces tailored to your preferences. Get in touch with us to discuss your custom order.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -130,6 +143,7 @@
                     Chat on WhatsApp
                 </a>
             @endif
+        </div>
         </div>
     </div>
 </section>

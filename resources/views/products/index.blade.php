@@ -4,17 +4,17 @@
 
 @section('content')
 <!-- Shop Header -->
-<section class="relative py-20 overflow-hidden {{ !empty($siteSettings->banner_background) ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
+<section class="relative flex items-center py-20 md:py-24 min-h-[420px] md:min-h-[540px] overflow-hidden {{ !empty($siteSettings->banner_background) ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
          @if(!empty($siteSettings->banner_background))
-             style="background-image: linear-gradient(120deg, rgba(25, 20, 16, 0.65), rgba(55, 40, 30, 0.45)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
+             style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
          @endif>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/25 to-black/45"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative text-center">
             <h1 class="text-4xl font-bold {{ !empty($siteSettings->banner_background) ? 'text-white' : 'text-gray-900' }} mb-4">
                 Shop Collection
             </h1>
-            <p class="text-lg {{ !empty($siteSettings->banner_background) ? 'text-white/90' : 'text-gray-600' }} max-w-2xl mx-auto">
+            <p class="text-lg {{ !empty($siteSettings->banner_background) ? 'text-white' : 'text-gray-600' }} max-w-2xl mx-auto">
                 Discover our beautiful collection of handmade resin art pieces
             </p>
         </div>
@@ -131,6 +131,10 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($products as $product)
                         @php $isOutOfStock = $product->manage_stock && (int) ($product->stock_quantity ?? 0) <= 0; @endphp
+                        @php
+                            $wishlistIds = $wishlistProductIds ?? [];
+                            $isWishlisted = auth()->check() && in_array((int) $product->id, $wishlistIds, true);
+                        @endphp
                         <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
                             <!-- Badge for customizable products -->
                             @if($product->customizable_product)
@@ -153,6 +157,29 @@
                                 </div>
                                 @if($isOutOfStock)
                                     <span class="absolute top-2 left-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">Out of Stock</span>
+                                @endif
+
+                                @if(auth()->check())
+                                    <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}" class="absolute top-2 right-2 z-10">
+                                        @csrf
+                                        <button type="submit" class="w-10 h-10 rounded-full bg-white/90 hover:bg-white border border-amber-100 hover:border-amber-200 flex items-center justify-center transition-all">
+                                            @if($isWishlisted)
+                                                <svg class="w-5 h-5 text-amber-700" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M12 21s-7.2-4.35-9.6-8.55C.9 9.75 2.1 6.9 4.65 5.85c1.8-.75 3.9-.3 5.25 1.05L12 8.1l2.1-1.2c1.35-1.35 3.45-1.8 5.25-1.05 2.55 1.05 3.75 3.9 2.25 6.6C19.2 16.65 12 21 12 21z"/>
+                                                </svg>
+                                            @else
+                                                <svg class="w-5 h-5 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                                                </svg>
+                                            @endif
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" class="absolute top-2 right-2 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white border border-amber-100 hover:border-amber-200 flex items-center justify-center transition-all" title="Login to wishlist">
+                                        <svg class="w-5 h-5 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                                        </svg>
+                                    </a>
                                 @endif
                             </a>
                             

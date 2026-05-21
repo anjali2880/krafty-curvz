@@ -7,6 +7,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CustomizationController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\Seo\SitemapController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Admin\SiteSettingsController;
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
+Route::view('/contact', 'contact')->name('contact');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -45,6 +47,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/my-orders', [CheckoutController::class, 'myOrders'])->name('orders.my');
     Route::get('/my-orders/{order}', [CheckoutController::class, 'showMyOrder'])->name('orders.show');
     Route::post('/my-orders/{order}/parcel-details', [CheckoutController::class, 'uploadParcelDetails'])->name('orders.parcel-details');
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
 Route::post('/customization/upload-image', [CustomizationController::class, 'uploadImage'])->name('customization.upload-image');

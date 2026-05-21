@@ -11,6 +11,17 @@
 <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
     <form method="GET" action="{{ route('admin.products.index') }}" class="flex flex-col sm:flex-row sm:items-end gap-3">
         <div class="sm:w-80">
+            <label for="product_name" class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+            <input
+                type="text"
+                id="product_name"
+                name="product_name"
+                value="{{ request('product_name') }}"
+                placeholder="Search by product name"
+                class="h-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500"
+            >
+        </div>
+        <div class="sm:w-80">
             <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Main Category</label>
             <select name="category_id" id="category_id" class="h-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
                 <option value="">All Categories</option>
@@ -27,9 +38,17 @@
                 <option value="">All Sub Categories</option>
             </select>
         </div>
+        <div class="sm:w-56">
+            <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select name="status" id="status" class="h-10 w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
+                <option value="">All Statuses</option>
+                <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
+                <option value="unpublished" {{ request('status') === 'unpublished' ? 'selected' : '' }}>Unpublished</option>
+            </select>
+        </div>
         <div class="flex items-end gap-2 sm:pb-0.5">
             <button type="submit" class="h-10 px-4 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center justify-center">Filter</button>
-            @if(request()->filled('category_id') || request()->filled('subcategory_id'))
+            @if(request()->filled('product_name') || request()->filled('category_id') || request()->filled('subcategory_id') || request()->filled('status'))
                 <a href="{{ route('admin.products.index') }}" class="h-10 px-4 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors inline-flex items-center justify-center">Clear</a>
             @endif
         </div>

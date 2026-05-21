@@ -101,7 +101,33 @@
             @if($product->category)
                 <p class="text-sm text-amber-600 font-medium mb-2">{{ $product->category->name }}</p>
             @endif
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $product->name }}</h1>
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
+                <div class="flex-shrink-0">
+                    @if(auth()->check())
+                        <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}">
+                            @csrf
+                            <button type="submit" class="w-11 h-11 rounded-full bg-white border border-amber-100 hover:border-amber-200 shadow-soft flex items-center justify-center transition-all" title="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}">
+                                @if(!empty($isWishlisted))
+                                    <svg class="w-6 h-6 text-amber-700" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 21s-7.2-4.35-9.6-8.55C.9 9.75 2.1 6.9 4.65 5.85c1.8-.75 3.9-.3 5.25 1.05L12 8.1l2.1-1.2c1.35-1.35 3.45-1.8 5.25-1.05 2.55 1.05 3.75 3.9 2.25 6.6C19.2 16.65 12 21 12 21z"/>
+                                    </svg>
+                                @else
+                                    <svg class="w-6 h-6 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                                    </svg>
+                                @endif
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="w-11 h-11 rounded-full bg-white border border-amber-100 hover:border-amber-200 shadow-soft flex items-center justify-center transition-all" title="Login to wishlist">
+                            <svg class="w-6 h-6 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                            </svg>
+                        </a>
+                    @endif
+                </div>
+            </div>
 
             <div class="flex items-center space-x-3 mb-6">
                 @if($product->sizes->count() > 0)

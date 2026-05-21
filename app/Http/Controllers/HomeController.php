@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Wishlist;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -29,6 +30,15 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        return view('home', compact('featuredProducts', 'categories', 'newArrivals'));
+        $wishlistProductIds = [];
+        if (auth()->check()) {
+            $wishlistProductIds = Wishlist::query()
+                ->where('user_id', auth()->id())
+                ->pluck('product_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        }
+
+        return view('home', compact('featuredProducts', 'categories', 'newArrivals', 'wishlistProductIds'));
     }
 }

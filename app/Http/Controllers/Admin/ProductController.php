@@ -42,6 +42,17 @@ class ProductController extends Controller
     {
         $query = Product::with(['category', 'images'])->latest();
 
+        if ($request->filled('product_name')) {
+            $query->where('name', 'like', '%' . trim((string) $request->input('product_name')) . '%');
+        }
+
+        if ($request->filled('status')) {
+            $status = (string) $request->input('status');
+            if (in_array($status, ['published', 'unpublished'], true)) {
+                $query->where('is_active', $status === 'published');
+            }
+        }
+
         if ($request->filled('subcategory_id')) {
             $query->where('category_id', $request->integer('subcategory_id'));
         } elseif ($request->filled('category_id')) {

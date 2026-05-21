@@ -6,13 +6,13 @@
 
 @section('content')
 <section
-    class="relative py-20 bg-cover bg-center bg-no-repeat"
-    style="background-image: linear-gradient(120deg, rgba(15, 24, 35, 0.52), rgba(96, 57, 26, 0.48)), url('{{ !empty($siteSettings->banner_background) ? asset('storage/' . $siteSettings->banner_background) : 'https://images.unsplash.com/photo-1579547945413-497e1b99dac0?auto=format&fit=crop&w=2000&q=80' }}');"
+    class="relative flex items-center py-20 md:py-24 min-h-[420px] md:min-h-[540px] bg-cover bg-center bg-no-repeat"
+    style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ !empty($siteSettings->banner_background) ? asset('storage/' . $siteSettings->banner_background) : 'https://images.unsplash.com/photo-1579547945413-497e1b99dac0?auto=format&fit=crop&w=2000&q=80' }}');"
 >
-    <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/35"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/25 to-black/45"></div>
     <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-white mb-5">Our Creative Journey</h1>
-        <p class="text-lg md:text-2xl text-white/90 max-w-3xl mx-auto">Where passion meets creativity in every handcrafted piece.</p>
+        <h1 class="text-4xl font-bold text-white mb-5">Our Creative Journey</h1>
+        <p class="text-lg text-white max-w-2xl mx-auto mb-8">Where passion meets creativity in every handcrafted piece.</p>
     </div>
 </section>
 

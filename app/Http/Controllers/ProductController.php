@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Wishlist;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -73,7 +74,17 @@ class ProductController extends Controller
         $products = $query->paginate(12)->appends($request->query());
         $categories = Category::where('is_active', true)->get();
 
-        return view('products.index', compact('products', 'categories'));
+        $wishlistProductIds = [];
+        if (auth()->check()) {
+            $wishlistProductIds = Wishlist::query()
+                ->where('user_id', auth()->id())
+                ->whereIn('product_id', $products->pluck('id')->all())
+                ->pluck('product_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        }
+
+        return view('products.index', compact('products', 'categories', 'wishlistProductIds'));
     }
 
     public function show(string $slug): View|RedirectResponse
@@ -140,11 +151,20 @@ class ProductController extends Controller
             }
         }
 
+        $isWishlisted = false;
+        if (auth()->check()) {
+            $isWishlisted = Wishlist::query()
+                ->where('user_id', auth()->id())
+                ->where('product_id', (int) $product->id)
+                ->exists();
+        }
+
         return view('products.show', compact(
             'product',
             'relatedProducts',
             'existingCustomizationData',
-            'existingCustomizationImage'
+            'existingCustomizationImage',
+            'isWishlisted'
         ));
     }
 }
