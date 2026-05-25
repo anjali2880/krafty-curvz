@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll(".flash-message").forEach(function(t){setTimeout(function(){t.style.transition="opacity 0.5s",t.style.opacity="0",setTimeout(function(){t.remove()},500)},5e3)})});
