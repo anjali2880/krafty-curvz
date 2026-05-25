@@ -160,6 +160,9 @@
                 border: 1px solid rgba(255, 255, 255, 0.16);
                 background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(180, 83, 9, 0.95));
                 color: white;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
                 box-shadow: 0 12px 30px rgba(245, 158, 11, 0.22);
                 transition: transform 200ms ease, box-shadow 200ms ease, filter 200ms ease;
             }
@@ -203,6 +206,11 @@
             /* Slick spacing tweaks */
             .kc-search-tags .slick-slide { margin: 0 8px; }
             .kc-search-tags .slick-list { margin: 0 -8px; }
+            /* Center suggestions when there are only a few tags */
+            .kc-search-tags .slick-list { display: flex; justify-content: center; }
+            .kc-search-tags .slick-track { display: flex; align-items: center; justify-content: center; margin-left: auto !important; margin-right: auto !important; }
+            .kc-search-tags .slick-slide { height: auto; }
+            .kc-search-tags .slick-list { padding: 0 22px; }
 
             @media (max-width: 640px) {
                 .kc-search-panel { border-radius: 22px; }
@@ -311,16 +319,31 @@
                     @endif
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <div class="lg:hidden flex items-center space-x-4">
-                    <a href="{{ route('cart.index') }}" class="relative text-neutral-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
-                        </svg>
-                        @if($cartCount > 0)
-                            <span class="absolute -top-2 -right-2 bg-gradient-to-r from-primary-500 to-accent-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">{{ $cartCount }}</span>
-                        @endif
-                    </a>
+	                <!-- Mobile Menu Button -->
+	                <div class="lg:hidden flex items-center space-x-4">
+                        <button type="button" onclick="openSearch()" class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Search">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </button>
+                        <a href="{{ auth()->check() ? route('wishlist') : route('login') }}" class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Wishlist">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
+                            </svg>
+                            @if($wishlistCount > 0)
+                                <span class="absolute -top-2 -right-2 bg-amber-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                                    {{ $wishlistCount > 99 ? '99+' : $wishlistCount }}
+                                </span>
+                            @endif
+                        </a>
+	                    <a href="{{ route('cart.index') }}" class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Cart">
+	                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+	                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+	                        </svg>
+	                        @if($cartCount > 0)
+	                            <span class="absolute -top-2 -right-2 bg-amber-700 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">{{ $cartCount }}</span>
+	                        @endif
+	                    </a>
                     <button onclick="toggleMobileMenu()" class="text-neutral-700 hover:text-primary-600 transition-colors duration-300">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -337,7 +360,6 @@
                 <a href="{{ route('products.index') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Shop</a>
                 <a href="{{ route('about') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">About</a>
                 <a href="{{ route('contact') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Contact</a>
-                <a href="{{ auth()->check() ? route('wishlist') : route('login') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Wishlist</a>
                 @if(auth()->check())
                     <a href="{{ route('orders.my') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">My Orders</a>
                     <form method="POST" action="{{ route('logout') }}">
@@ -500,7 +522,6 @@
                     <div class="kc-search-tags" aria-label="Search suggestions">
                         <div class="kc-tag" data-kc-value="keychain"><span class="kc-tag-dot"></span>Keychain</div>
                         <div class="kc-tag" data-kc-value="candle"><span class="kc-tag-dot"></span>Candle</div>
-                        <div class="kc-tag" data-kc-value="resin preservation"><span class="kc-tag-dot"></span>Resin Preservation</div>
                         <div class="kc-tag" data-kc-value="photo frame"><span class="kc-tag-dot"></span>Photo Frame</div>
                         <div class="kc-tag" data-kc-value="bouquet"><span class="kc-tag-dot"></span>Bouquet</div>
                         <div class="kc-tag" data-kc-value="tray"><span class="kc-tag-dot"></span>Tray</div>
@@ -537,23 +558,23 @@
         // Premium fullscreen search UI (jQuery + Slick). Use jQuery instead of "$" everywhere.
         jQuery(function() {
             // Slick tags (smooth premium transitions)
-            if (jQuery('.kc-search-tags').length && typeof jQuery('.kc-search-tags').slick === 'function') {
-                jQuery('.kc-search-tags').slick({
-                    arrows: false,
-                    dots: false,
-                    infinite: false,
-                    speed: 420,
-                    cssEase: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                    swipeToSlide: true,
-                    variableWidth: true,
-                    responsive: [
-                        { breakpoint: 1024, settings: { slidesToShow: 3 } },
-                        { breakpoint: 640, settings: { slidesToShow: 2 } }
-                    ]
-                });
-            }
+                if (jQuery('.kc-search-tags').length && typeof jQuery('.kc-search-tags').slick === 'function') {
+                    jQuery('.kc-search-tags').slick({
+                        arrows: false,
+                        dots: false,
+                        infinite: false,
+                        speed: 420,
+                        cssEase: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+                        slidesToShow: 4,
+                        slidesToScroll: 1,
+                        swipeToSlide: true,
+                        variableWidth: true,
+                        responsive: [
+                            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+                            { breakpoint: 640, settings: { slidesToShow: 2 } }
+                        ]
+                    });
+                }
 
             // Click tag -> fill input and focus
             jQuery(document).on('click', '.kc-tag', function() {
