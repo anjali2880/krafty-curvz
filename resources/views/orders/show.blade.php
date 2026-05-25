@@ -16,6 +16,12 @@
             'waiting_for_customer_parcel' => 'bg-white text-gray-900 border-gray-300',
             default => 'bg-gray-100 text-gray-700 border-gray-200',
         };
+        $paymentStatusText = ucfirst($order->payment_status);
+        $paymentStatusClass = match($order->payment_status) {
+            'paid' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+            'refunded' => 'bg-rose-100 text-rose-700 border-rose-200',
+            default => 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        };
     @endphp
 
     <div class="relative overflow-hidden bg-gray-900 text-white p-8 md:p-10 mb-10 shadow-xl border border-gray-800">
@@ -35,19 +41,42 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-        <div class="bg-white/95 border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Order Total</p>
-            <p class="text-2xl font-bold text-gray-900 mt-2">&#8377;{{ number_format($order->total, 0) }}</p>
-        </div>
-        <div class="bg-white/95 border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Items</p>
-            <p class="text-2xl font-bold text-gray-900 mt-2">{{ $order->items->count() }}</p>
-        </div>
-        <div class="bg-white/95 border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Order Type</p>
-            <p class="text-lg font-semibold text-gray-900 mt-2">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</p>
-        </div>
+    <div class="mb-10 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="rounded-[24px] border border-amber-100 p-6 md:p-7 bg-gradient-to-br from-white to-amber-50/40 min-h-[138px] flex flex-col justify-between shadow-sm">
+                <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Order Total</p>
+                <div>
+                    <p class="text-3xl font-bold text-slate-900 leading-none">&#8377;{{ number_format($order->total, 0) }}</p>
+                    <p class="text-sm text-slate-500 mt-2">Final payable amount</p>
+                </div>
+            </div>
+            <div class="rounded-[24px] border border-amber-100 p-6 md:p-7 bg-gradient-to-br from-white to-slate-50 min-h-[138px] flex flex-col justify-between shadow-sm">
+                <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Items</p>
+                <div>
+                    <p class="text-3xl font-bold text-slate-900 leading-none">{{ $order->items->count() }}</p>
+                    <p class="text-sm text-slate-500 mt-2">Products in this order</p>
+                </div>
+            </div>
+            <div class="rounded-[24px] border border-amber-100 p-6 md:p-7 bg-gradient-to-br from-white to-slate-50 min-h-[138px] flex flex-col justify-between shadow-sm">
+                <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Order Type</p>
+                <div>
+                    <p class="text-xl font-semibold text-slate-900 leading-snug">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</p>
+                    <p class="text-sm text-slate-500 mt-2">Selected checkout workflow</p>
+                </div>
+            </div>
+            <div class="rounded-[24px] border border-amber-100 p-6 md:p-7 bg-gradient-to-br from-white to-slate-50 min-h-[138px] flex flex-col justify-between shadow-sm">
+                <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Order Status</p>
+                <div>
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full border text-sm font-semibold {{ $statusClass }}">{{ $statusText }}</span>
+                    <p class="text-sm text-slate-500 mt-3">Current progress update</p>
+                </div>
+            </div>
+            <div class="rounded-[24px] border border-amber-100 p-6 md:p-7 bg-gradient-to-br from-white to-slate-50 min-h-[138px] flex flex-col justify-between shadow-sm">
+                <p class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Payment Status</p>
+                <div>
+                    <span class="inline-flex items-center px-3 py-1.5 rounded-full border text-sm font-semibold {{ $paymentStatusClass }}">{{ $paymentStatusText }}</span>
+                    <p class="text-sm text-slate-500 mt-3">Latest payment state</p>
+                </div>
+            </div>
     </div>
 
     <div class="bg-white/95 border border-gray-200 overflow-hidden shadow-sm mb-10">

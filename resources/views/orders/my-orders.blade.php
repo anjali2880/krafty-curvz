@@ -26,6 +26,7 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order Type</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Total</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Payment Status</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Action</th>
                         </tr>
                     </thead>
@@ -43,6 +44,12 @@
                                     'waiting_for_customer_parcel' => 'bg-amber-100 text-amber-800',
                                     default => 'bg-gray-100 text-gray-700',
                                 };
+                                $paymentStatusText = ucfirst($order->payment_status);
+                                $paymentStatusClass = match($order->payment_status) {
+                                    'paid' => 'bg-emerald-100 text-emerald-700',
+                                    'refunded' => 'bg-rose-100 text-rose-700',
+                                    default => 'bg-yellow-100 text-yellow-800',
+                                };
                             @endphp
                             <tr class="hover:bg-amber-50/40 transition-colors">
                                 <td class="px-6 py-4 text-sm font-semibold">
@@ -56,6 +63,9 @@
                                 <td class="px-6 py-4 text-sm font-semibold text-slate-900">&#8377;{{ number_format($order->total, 0) }}</td>
                                 <td class="px-6 py-4 text-sm">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full font-semibold {{ $statusClass }}">{{ $statusText }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-sm">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full font-semibold {{ $paymentStatusClass }}">{{ $paymentStatusText }}</span>
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     <a href="{{ route('orders.show', $order) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 font-semibold transition-colors shadow-sm">

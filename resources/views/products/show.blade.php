@@ -146,10 +146,6 @@
                 <p class="text-sm text-gray-600 mb-4">Available: {{ $availableStock }}</p>
             @endif
 
-            <div class="prose prose-sm text-gray-600 mb-6">
-                <p>{{ $product->description }}</p>
-            </div>
-
             @if($product->sizes->count() > 0)
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Size:</label>
@@ -249,6 +245,19 @@
             </form>
         </div>
     </div>
+
+    @if(!empty(trim((string) $product->description)))
+        <section class="mt-12 bg-white border border-amber-100 rounded-3xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-amber-100 bg-amber-50/60">
+                <h2 class="text-2xl font-semibold text-gray-900">About This Product</h2>
+            </div>
+            <div class="px-6 py-6 md:px-8 md:py-8">
+                <div class="max-w-4xl text-gray-700 leading-8 whitespace-pre-line">
+                    {{ trim((string) $product->description) }}
+                </div>
+            </div>
+        </section>
+    @endif
 
     <!-- Custom Product Builder Modal -->
     @if($product->customizable_product)

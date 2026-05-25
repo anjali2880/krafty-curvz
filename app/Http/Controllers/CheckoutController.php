@@ -73,13 +73,34 @@ class CheckoutController extends Controller
         $prefillOrderType = session('checkout_order_type', 'normal');
         $prefillItemDescription = session('checkout_item_description');
         $prefillCustomNote = session('checkout_custom_note');
+        $prefillCustomerName = '';
+        $prefillCustomerEmail = '';
+        $prefillCustomerPhone = '';
+        $prefillShippingAddress = '';
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $latestOrder = Order::query()
+                ->where('user_id', $user->id)
+                ->latest()
+                ->first();
+
+            $prefillCustomerName = (string) ($user->name ?? '');
+            $prefillCustomerEmail = (string) ($user->email ?? '');
+            $prefillCustomerPhone = (string) ($latestOrder->customer_phone ?? '');
+            $prefillShippingAddress = (string) ($latestOrder->shipping_address ?? '');
+        }
 
         return view('checkout.index', compact(
             'cart',
             'subtotal',
             'prefillOrderType',
             'prefillItemDescription',
-            'prefillCustomNote'
+            'prefillCustomNote',
+            'prefillCustomerName',
+            'prefillCustomerEmail',
+            'prefillCustomerPhone',
+            'prefillShippingAddress'
         ));
     }
 

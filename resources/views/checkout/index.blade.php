@@ -16,17 +16,17 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                        <input type="text" name="customer_name" value="{{ old('customer_name') }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
+                        <input type="text" name="customer_name" value="{{ old('customer_name', $prefillCustomerName ?? '') }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
                         @error('customer_name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                        <input type="email" name="customer_email" value="{{ old('customer_email') }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
+                        <input type="email" name="customer_email" value="{{ old('customer_email', $prefillCustomerEmail ?? '') }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
                         @error('customer_email') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
-                        <input type="tel" name="customer_phone" value="{{ old('customer_phone') }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
+                        <input type="tel" name="customer_phone" value="{{ old('customer_phone', $prefillCustomerPhone ?? '') }}" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
                         @error('customer_phone') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                 <h2 class="text-lg font-semibold mb-4">Shipping Address</h2>
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Full Address *</label>
-                    <textarea name="shipping_address" rows="3" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">{{ old('shipping_address') }}</textarea>
+                    <textarea name="shipping_address" rows="3" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">{{ old('shipping_address', $prefillShippingAddress ?? '') }}</textarea>
                     @error('shipping_address') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
