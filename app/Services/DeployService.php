@@ -144,5 +144,10 @@ class DeployService
         }
 
         $log->appendOutput("[DONE] All commands executed successfully.\n");
+
+        // Gracefully close the SSH session (equivalent to running `exit`)
+        $log->appendOutput("\n$ exit\n");
+        $ssh->disconnect();
+        $log->appendOutput("[OK] SSH session closed. Logged out from server.\n");
     }
 }

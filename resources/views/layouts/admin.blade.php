@@ -7,10 +7,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-full">
-    <div class="flex min-h-screen">
+<body class="bg-gray-100 text-gray-900 min-h-full overflow-x-hidden">
+    <div class="min-h-screen md:flex">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gray-900 text-white flex-shrink-0 hidden md:flex md:flex-col">
+        <aside class="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-64 bg-gray-900 text-white overflow-y-auto">
             <div class="p-6 border-b border-gray-700">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-2">
                     <span class="text-xl font-bold text-amber-400">Krafty</span>
@@ -56,47 +56,56 @@
         </aside>
 
         <!-- Mobile Header -->
-        <div class="md:hidden fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 p-4 flex justify-between items-center">
-            <span class="font-bold">KC Admin</span>
-            <button onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')" class="text-white">
+        <div class="md:hidden fixed top-0 left-0 right-0 bg-gray-900 text-white z-50 h-16 px-4 flex justify-between items-center shadow-lg">
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 min-w-0">
+                <span class="font-bold text-amber-400">Krafty Curvz</span>
+                <span class="text-xs bg-amber-600 text-white px-2 py-0.5 rounded-full">Admin</span>
+            </a>
+            <button type="button" onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')" class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
         </div>
-        <div id="mobile-sidebar" class="hidden md:hidden fixed inset-0 z-50 bg-gray-900 text-white p-6">
-            <button onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')" class="absolute top-4 right-4 text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-            <nav class="mt-12 space-y-4">
-                <a href="{{ route('admin.dashboard') }}" class="block py-2 text-gray-300 hover:text-amber-400">Dashboard</a>
-                <a href="{{ route('admin.products.index') }}" class="block py-2 text-gray-300 hover:text-amber-400">Products</a>
-                <a href="{{ route('admin.categories.index') }}" class="block py-2 text-gray-300 hover:text-amber-400">Categories</a>
-                <a href="{{ route('admin.orders.index') }}" class="block py-2 text-gray-300 hover:text-amber-400">Orders</a>
-                <a href="{{ route('admin.settings.index') }}" class="block py-2 text-gray-300 hover:text-amber-400">Settings</a>
-                <a href="{{ route('admin.deploy.index') }}" class="block py-2 text-gray-300 hover:text-amber-400">Deploy</a>
-                <form method="POST" action="{{ route('admin.logout') }}">
+        <div id="mobile-sidebar" class="hidden md:hidden fixed inset-0 z-[60] bg-gray-950/95 text-white p-5 overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2">
+                    <span class="text-lg font-bold text-amber-400">Krafty Curvz</span>
+                    <span class="text-xs bg-amber-600 text-white px-2 py-0.5 rounded-full">Admin</span>
+                </a>
+                <button type="button" onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')" class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <nav class="mt-6 space-y-2">
+                <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-4 py-3 text-gray-200 hover:bg-white/10 hover:text-amber-300 {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-amber-300' : '' }}">Dashboard</a>
+                <a href="{{ route('admin.products.index') }}" class="block rounded-lg px-4 py-3 text-gray-200 hover:bg-white/10 hover:text-amber-300 {{ request()->routeIs('admin.products.*') ? 'bg-white/10 text-amber-300' : '' }}">Products</a>
+                <a href="{{ route('admin.categories.index') }}" class="block rounded-lg px-4 py-3 text-gray-200 hover:bg-white/10 hover:text-amber-300 {{ request()->routeIs('admin.categories.*') ? 'bg-white/10 text-amber-300' : '' }}">Categories</a>
+                <a href="{{ route('admin.orders.index') }}" class="block rounded-lg px-4 py-3 text-gray-200 hover:bg-white/10 hover:text-amber-300 {{ request()->routeIs('admin.orders.*') ? 'bg-white/10 text-amber-300' : '' }}">Orders</a>
+                <a href="{{ route('admin.settings.index') }}" class="block rounded-lg px-4 py-3 text-gray-200 hover:bg-white/10 hover:text-amber-300 {{ request()->routeIs('admin.settings.*') ? 'bg-white/10 text-amber-300' : '' }}">Settings</a>
+                <a href="{{ route('admin.deploy.index') }}" class="block rounded-lg px-4 py-3 text-gray-200 hover:bg-white/10 hover:text-amber-300 {{ request()->routeIs('admin.deploy.*') ? 'bg-white/10 text-amber-300' : '' }}">Deploy</a>
+                <form method="POST" action="{{ route('admin.logout') }}" class="pt-3 border-t border-white/10">
                     @csrf
-                    <button type="submit" class="block py-2 text-gray-300 hover:text-amber-400">Logout</button>
+                    <button type="submit" class="block w-full rounded-lg px-4 py-3 text-left text-gray-200 hover:bg-white/10 hover:text-amber-300">Logout</button>
                 </form>
             </nav>
         </div>
 
         <!-- Main Content -->
-        <div class="flex-1 md:ml-0">
-            <div class="md:pt-0 pt-16">
+        <div class="min-w-0 flex-1 md:ml-64">
+            <div class="pt-16 md:pt-0">
                 @if(session('success'))
-                    <div class="flash-message mx-6 mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                    <div class="flash-message mx-4 md:mx-6 mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
                         {{ session('success') }}
                     </div>
                 @endif
                 @if(session('error'))
-                    <div class="flash-message mx-6 mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                    <div class="flash-message mx-4 md:mx-6 mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                         {{ session('error') }}
                     </div>
                 @endif
 
-                <div class="p-6">
+                <main class="p-4 sm:p-5 md:p-6 lg:p-8 min-w-0">
                     @yield('content')
-                </div>
+                </main>
             </div>
         </div>
     </div>
