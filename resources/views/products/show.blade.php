@@ -66,9 +66,9 @@
     $showOrderType = $product->canUseResinOrderType();
     $hasSavedDesign = !empty($existingCustomizationData);
 @endphp
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-8">
     <!-- Breadcrumb -->
-    <nav class="mb-6 text-sm text-gray-500">
+    <nav class="mb-4 md:mb-6 text-sm text-gray-500">
         <a href="{{ route('home') }}" class="hover:text-amber-700">Home</a> &gt;
             <a href="{{ route('products.index') }}" class="hover:text-amber-700">Shop</a> &gt;
         @if($product->category)
@@ -77,16 +77,16 @@
         <span class="text-gray-800">{{ $product->name }}</span>
     </nav>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">
         <!-- Product Images -->
         <div>
-            <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-3 md:mb-4">
                 <div id="main-image" class="aspect-square bg-gray-100 flex items-center justify-center">
                     <img id="main-product-image" src="{{ $product->primary_image_url }}" alt="{{ $product->name }} handmade product image" fetchpriority="high" class="w-full h-full object-cover">
                 </div>
             </div>
             @if($displayImages->count() > 1)
-                <div class="flex gap-3 overflow-x-auto pb-2">
+                <div class="flex gap-2 md:gap-3 overflow-x-auto pb-2">
                     @foreach($displayImages as $image)
                         <button onclick="document.getElementById('main-product-image').src='{{ asset('storage/' . $image->image_path) }}'" class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 border-transparent hover:border-amber-500 transition-colors">
                             <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $product->name }} gallery image {{ $loop->iteration }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
@@ -101,8 +101,8 @@
             @if($product->category)
                 <p class="text-sm text-amber-600 font-medium mb-2">{{ $product->category->name }}</p>
             @endif
-            <div class="flex items-start justify-between gap-4 mb-4">
-                <h1 class="text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
+            <div class="flex items-start justify-between gap-4 mb-3 md:mb-4">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900">{{ $product->name }}</h1>
                 <div class="flex-shrink-0">
                     @if(auth()->check())
                         <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}">
@@ -129,15 +129,15 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3 mb-6">
+            <div class="flex items-center space-x-3 mb-4 md:mb-6">
                 @if($product->sizes->count() > 0)
-                    <span class="text-3xl font-bold text-amber-700" id="main-price">&#8377;{{ number_format($product->sizes->first()->price, 0) }}</span>
+                    <span class="text-2xl md:text-3xl font-bold text-amber-700" id="main-price">&#8377;{{ number_format($product->sizes->first()->price, 0) }}</span>
                 @elseif($product->sale_price)
-                    <span class="text-3xl font-bold text-amber-700">&#8377;{{ number_format($product->sale_price, 0) }}</span>
+                    <span class="text-2xl md:text-3xl font-bold text-amber-700">&#8377;{{ number_format($product->sale_price, 0) }}</span>
                     <span class="text-xl text-gray-400 line-through">&#8377;{{ number_format($product->price, 0) }}</span>
                     <span class="bg-red-100 text-red-700 text-sm px-2 py-0.5 rounded-full">{{ round((1 - $product->sale_price / $product->price) * 100) }}% OFF</span>
                 @else
-                    <span class="text-3xl font-bold text-gray-900">&#8377;{{ number_format($product->price, 0) }}</span>
+                    <span class="text-2xl md:text-3xl font-bold text-gray-900">&#8377;{{ number_format($product->price, 0) }}</span>
                 @endif
             </div>
             @if($isOutOfStock)
@@ -147,7 +147,7 @@
             @endif
 
             @if($product->sizes->count() > 0)
-                <div class="mb-6">
+                <div class="mb-4 md:mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Select Size:</label>
                     <select id="size-select" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">
                         @foreach($product->sizes as $size)
@@ -160,7 +160,7 @@
             @endif
 
             @if($product->customizable_product)
-                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-6">
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4 md:mb-6">
                     <div class="flex items-center space-x-2 mb-2">
                         <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
                         <span class="font-semibold text-purple-700">Customizable Product</span>
@@ -188,7 +188,7 @@
             @endif
 
             <!-- Add to Cart Form -->
-            <form method="POST" action="{{ route('cart.add') }}" class="mb-6">
+            <form method="POST" action="{{ route('cart.add') }}" class="mb-4 md:mb-6">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 <input type="hidden" name="size_id" id="selected_size_id" value="{{ $product->sizes->count() > 0 ? $product->sizes->first()->id : '' }}">
@@ -247,11 +247,11 @@
     </div>
 
     @if(!empty(trim((string) $product->description)))
-        <section class="mt-12 bg-white border border-amber-100 rounded-3xl shadow-sm overflow-hidden">
-            <div class="px-6 py-4 border-b border-amber-100 bg-amber-50/60">
-                <h2 class="text-2xl font-semibold text-gray-900">About This Product</h2>
+        <section class="mt-8 md:mt-12 bg-white border border-amber-100 rounded-3xl shadow-sm overflow-hidden">
+            <div class="px-5 md:px-6 py-4 border-b border-amber-100 bg-amber-50/60">
+                <h2 class="text-xl md:text-2xl font-semibold text-gray-900">About This Product</h2>
             </div>
-            <div class="px-6 py-6 md:px-8 md:py-8">
+            <div class="px-5 py-5 md:px-8 md:py-8">
                 <div class="max-w-4xl text-gray-700 leading-8 whitespace-pre-line">
                     {{ trim((string) $product->description) }}
                 </div>
@@ -354,9 +354,9 @@
 
     <!-- Related Products -->
 @if($relatedProducts->count() > 0)
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold mb-6">You May Also Like</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="mt-10 md:mt-16">
+            <h2 class="text-xl md:text-2xl font-bold mb-5 md:mb-6">You May Also Like</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
                 @foreach($relatedProducts as $relatedProduct)
                     @include('partials.product-card', ['product' => $relatedProduct])
                 @endforeach

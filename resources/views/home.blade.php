@@ -13,7 +13,7 @@
 @section('content')
 <!-- Hero Section -->
 <section
-    class="relative flex items-center py-10 md:py-24 min-h-[420px] md:min-h-[540px] {{ $siteSettings->banner_background ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
+    class="relative flex items-center py-12 md:py-24 min-h-[300px] sm:min-h-[360px] md:min-h-[540px] {{ $siteSettings->banner_background ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
     @if($siteSettings->banner_background)
         style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
     @endif
@@ -26,13 +26,13 @@
             <p class="inline-flex items-center px-4 py-1 rounded-full border border-white/25 bg-white/5 text-xs sm:text-sm uppercase tracking-[0.22em] {{ $siteSettings->banner_background ? 'text-white/90' : 'text-gray-700' }} font-semibold">
                 Handmade. Personal. Timeless.
             </p>
-            <h1 class="mt-5 text-4xl md:text-6xl font-bold leading-tight {{ $siteSettings->banner_background ? 'text-white' : 'text-gray-900' }}" style="font-family: 'Cormorant Garamond', serif;">
+            <h1 class="mt-4 text-3xl sm:text-4xl md:text-6xl font-bold leading-tight {{ $siteSettings->banner_background ? 'text-white' : 'text-gray-900' }}" style="font-family: 'Cormorant Garamond', serif;">
                 Handcrafted Resin Art That Preserves Your Precious Memories
             </h1>
-            <p class="mt-5 text-lg md:text-xl {{ $siteSettings->banner_background ? 'text-white/90' : 'text-gray-600' }} max-w-3xl mx-auto" style="font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';">
+            <p class="mt-4 text-base md:text-xl {{ $siteSettings->banner_background ? 'text-white/90' : 'text-gray-600' }} max-w-3xl mx-auto" style="font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji';">
                 Personalized keepsakes, gifts, and decor crafted with care. From custom name pieces to resin preservation, we turn moments into art.
             </p>
-            <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <div class="mt-6 md:mt-8 flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
                 <a href="{{ route('products.index') }}" class="inline-flex items-center justify-center bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors">
                     Shop Collection
                 </a>
@@ -45,8 +45,8 @@
 @if($categories->count() > 0)
 <section class="py-10 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Shop by Category</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-7 md:mb-12">Shop by Category</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
             @foreach($categories->where('parent_id', null) as $mainCategory)
                 <a href="{{ route('category.show', $mainCategory->slug) }}" class="group">
                     <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden h-full flex flex-col">
@@ -63,7 +63,7 @@
                                 </svg>
                             @endif
                         </div>
-                        <div class="p-6 flex-1 flex flex-col">
+                            <div class="p-5 md:p-6 flex-1 flex flex-col">
                             <h3 class="font-semibold text-gray-800 group-hover:text-amber-600 transition-colors text-lg mb-2">{{ $mainCategory->name }}</h3>
                             <p class="text-sm text-gray-600 mb-3">{{ $mainCategory->description }}</p>
                             @if($mainCategory->children->count() > 0)
@@ -89,13 +89,13 @@
 @if($newArrivals->count() > 0)
 <section class="py-10 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">New Arrivals</h2>
+        <div class="text-center mb-7 md:mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">New Arrivals</h2>
             <p class="text-gray-600 max-w-2xl mx-auto">
                 Fresh pieces just added to our collection
             </p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
             @foreach($newArrivals as $product)
                 @include('partials.product-card', ['product' => $product])
             @endforeach
@@ -108,18 +108,18 @@
 @if($featuredProducts->count() > 0)
 <section class="py-10 md:py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+        <div class="text-center mb-7 md:mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3 md:mb-4">Featured Products</h2>
             <p class="text-gray-600 max-w-2xl mx-auto">
                 Check out our handpicked favorites from the collection
             </p>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-8">
             @foreach($featuredProducts as $product)
                 @include('partials.product-card', ['product' => $product])
             @endforeach
         </div>
-        <div class="text-center mt-12">
+        <div class="text-center mt-8 md:mt-12">
             <a href="{{ route('products.index') }}" class="inline-block bg-amber-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors">
                 View All Products
             </a>
@@ -136,13 +136,13 @@
     <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/55 to-black/65"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="relative">
-        <h2 class="text-3xl font-bold text-white mb-4">
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4">
             Looking for something custom?
         </h2>
-        <p class="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+        <p class="text-base md:text-xl text-white/90 mb-6 md:mb-8 max-w-2xl mx-auto">
             We create personalized resin pieces tailored to your preferences. Get in touch with us to discuss your custom order.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
             <a href="mailto:{{ $siteSettings->contact_email ?? 'contact@kraftycurvz.com' }}" class="inline-block bg-white text-amber-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
                 Email Us
             </a>

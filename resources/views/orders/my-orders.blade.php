@@ -4,10 +4,10 @@
 @section('robots', 'noindex, nofollow')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8 rounded-2xl p-6 md:p-8 shadow-lg border border-amber-200 bg-amber-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="mb-6 md:mb-8 rounded-2xl p-5 md:p-8 shadow-lg border border-amber-200 bg-amber-50">
         <p class="text-xs uppercase tracking-[0.2em] text-amber-700 font-semibold">Account</p>
-        <h1 class="text-3xl md:text-4xl font-bold mt-1 text-gray-900">My Orders</h1>
+        <h1 class="text-2xl md:text-4xl font-bold mt-1 text-gray-900">My Orders</h1>
         <p class="text-gray-700 mt-2">Track all placed orders and check the latest status updates.</p>
     </div>
 
@@ -16,19 +16,19 @@
             <p class="text-gray-600">No orders found.</p>
         </div>
     @else
-        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-md">
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden mb-6 md:mb-8 shadow-md">
             <div class="overflow-x-auto">
                 <table class="w-full table-auto divide-y divide-gray-200">
                     <thead class="bg-gray-900">
                         <tr>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Date</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Items</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order Type</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Total</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Status</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Payment Status</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Action</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Date</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Items</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order Type</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Total</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Status</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Payment Status</th>
+                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Action</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
@@ -53,22 +53,22 @@
                                 };
                             @endphp
                             <tr class="hover:bg-amber-50/40 transition-colors">
-                                <td class="px-6 py-4 text-sm font-semibold">
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm font-semibold">
                                     <a href="{{ route('orders.show', $order) }}" class="text-amber-700 hover:text-amber-800 hover:underline">
                                         #{{ $order->order_number }}
                                     </a>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-slate-700">{{ $order->created_at->format('d M Y, h:i A') }}</td>
-                                <td class="px-6 py-4 text-sm text-slate-700 font-medium">{{ $order->items->count() }}</td>
-                                <td class="px-6 py-4 text-sm text-slate-700">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</td>
-                                <td class="px-6 py-4 text-sm font-semibold text-slate-900">&#8377;{{ number_format($order->total, 0) }}</td>
-                                <td class="px-6 py-4 text-sm">
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm text-slate-700">{{ $order->created_at->format('d M Y, h:i A') }}</td>
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm text-slate-700 font-medium">{{ $order->items->count() }}</td>
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm text-slate-700">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</td>
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm font-semibold text-slate-900">&#8377;{{ number_format($order->total, 0) }}</td>
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full font-semibold {{ $statusClass }}">{{ $statusText }}</span>
                                 </td>
-                                <td class="px-6 py-4 text-sm">
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full font-semibold {{ $paymentStatusClass }}">{{ $paymentStatusText }}</span>
                                 </td>
-                                <td class="px-6 py-4 text-sm">
+                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
                                     <a href="{{ route('orders.show', $order) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 font-semibold transition-colors shadow-sm">
                                         View
                                     </a>

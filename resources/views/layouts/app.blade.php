@@ -297,18 +297,18 @@
     <!-- Modern Header -->
     <header class="bg-[#fff7eb]/95 border-b border-amber-100/80 backdrop-blur-md shadow-soft sticky top-0 left-0 right-0 z-50 transition-all duration-300">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
+            <div class="flex justify-between h-16 md:h-20 items-center">
                 <!-- Logo -->
                 <div class="flex items-center">
                     <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
                         @if($siteSettings->logo)
                             <div class="relative">
-                                <img src="{{ asset('storage/' . $siteSettings->logo) }}" alt="{{ $siteSettings->site_name }}" class="h-14 object-contain transition-transform duration-300 group-hover:scale-110">
+                                <img src="{{ asset('storage/' . $siteSettings->logo) }}" alt="{{ $siteSettings->site_name }}" class="h-11 md:h-14 object-contain transition-transform duration-300 group-hover:scale-110">
                                 <div class="absolute inset-0 bg-primary-400/20 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </div>
                         @endif
                         @if($siteSettings->show_site_name)
-                            <span class="text-2xl tracking-wide font-bold text-[#5f3c2a]" style="font-family: 'Cormorant Garamond', serif;">{{ $siteSettings->site_name }}</span>
+                            <span class="hidden sm:inline text-2xl tracking-wide font-bold text-[#5f3c2a]" style="font-family: 'Cormorant Garamond', serif;">{{ $siteSettings->site_name }}</span>
                         @endif
                     </a>
                 </div>
@@ -393,13 +393,13 @@
                 </div>
 
 	                <!-- Mobile Menu Button -->
-	                <div class="lg:hidden flex items-center space-x-4">
-                        <button type="button" onclick="openSearch()" class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Search">
+		                <div class="lg:hidden flex items-center gap-2">
+                        <button type="button" onclick="openSearch()" class="relative inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Search">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z"/>
                             </svg>
                         </button>
-                        <a href="{{ auth()->check() ? route('wishlist') : route('login') }}" class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Wishlist">
+	                        <a href="{{ auth()->check() ? route('wishlist') : route('login') }}" class="relative inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Wishlist">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364 4.318 12.682a4.5 4.5 0 010-6.364z"/>
                             </svg>
@@ -409,7 +409,7 @@
                                 </span>
                             @endif
                         </a>
-	                    <a href="{{ route('cart.index') }}" class="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Cart">
+		                    <a href="{{ route('cart.index') }}" class="relative inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/70 hover:bg-white border border-amber-100 hover:border-amber-200 text-neutral-800 hover:text-amber-700 transition-all duration-300" aria-label="Cart">
 	                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 	                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
 	                        </svg>
@@ -428,27 +428,27 @@
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-md border-t border-neutral-200">
-            <div class="px-4 sm:px-6 lg:px-8 py-4 space-y-3">
-                <a href="{{ route('home') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Home</a>
-                <a href="{{ route('products.index') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Shop</a>
-                <a href="{{ route('about') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">About</a>
-                <a href="{{ route('contact') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Contact</a>
+	            <div class="px-4 sm:px-6 lg:px-8 py-3 space-y-1">
+                <a href="{{ route('home') }}" class="block py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Home</a>
+                <a href="{{ route('products.index') }}" class="block py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Shop</a>
+                <a href="{{ route('about') }}" class="block py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">About</a>
+                <a href="{{ route('contact') }}" class="block py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Contact</a>
                 @if(auth()->check())
-                    <a href="{{ route('orders.my') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">My Orders</a>
+                    <a href="{{ route('orders.my') }}" class="block py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">My Orders</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="block w-full text-left py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Logout</button>
+                        <button type="submit" class="block w-full text-left py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Logout</button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="block py-3 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Login</a>
-                    <a href="{{ route('register') }}" class="block py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium rounded-lg text-center transition-all duration-300">Register</a>
+                    <a href="{{ route('login') }}" class="block py-2.5 text-neutral-700 hover:text-primary-600 font-medium transition-colors duration-300 border-l-4 border-transparent hover:border-primary-500 pl-4">Login</a>
+                    <a href="{{ route('register') }}" class="block py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium rounded-lg text-center transition-all duration-300">Register</a>
                 @endif
             </div>
         </div>
     </header>
 
     <!-- Main -->
-    <main class="min-h-screen">
+    <main>
         <!-- Flash Messages -->
         @if(session('success'))
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 animate-slide-down">
@@ -481,10 +481,10 @@
 
     <!-- Premium Footer -->
     <footer class="bg-[#fff7eb] text-[#2f241c] border-t border-amber-100/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-left">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 text-left">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 md:gap-10 items-start">
                 <!-- Brand -->
-                <div class="lg:col-span-4 space-y-4">
+                <div class="lg:col-span-4 space-y-3 md:space-y-4">
                     <div class="flex items-center gap-4">
                         @if($siteSettings->footer_logo)
                             <img src="{{ asset('storage/' . $siteSettings->footer_logo) }}" alt="{{ $siteSettings->site_name }} logo" class="h-12 object-contain">
@@ -496,17 +496,17 @@
                             <div class="text-xs uppercase tracking-[0.22em] text-amber-700">Handmade Luxury</div>
                         </div>
                     </div>
-                    <p class="text-sm text-[#4a3a2f] leading-7 max-w-md">
-                        Handmade resin art, scented candles & creative gifts crafted with love.
+                    <p class="text-sm text-[#4a3a2f] leading-7 max-w-md whitespace-pre-line">
+                        {{ trim((string) ($siteSettings->footer_text ?: 'Handmade resin art, scented candles & creative gifts crafted with love.')) }}
                     </p>
                 </div>
 
                 <div class="lg:col-span-8">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-10">
                         <!-- Quick Links -->
                         <div>
                             <h4 class="text-sm font-semibold uppercase tracking-[0.22em] text-[#5f3c2a]">Quick Links</h4>
-                            <ul class="mt-4 space-y-3 text-sm">
+                            <ul class="mt-3 md:mt-4 space-y-2.5 md:space-y-3 text-sm">
                                 <li><a href="{{ route('home') }}" class="text-[#4a3a2f] hover:text-amber-800 transition-colors">Home</a></li>
                                 <li><a href="{{ route('products.index') }}" class="text-[#4a3a2f] hover:text-amber-800 transition-colors">Shop</a></li>
                                 <li><a href="{{ route('about') }}" class="text-[#4a3a2f] hover:text-amber-800 transition-colors">About</a></li>
@@ -517,7 +517,7 @@
                         <!-- Categories -->
                         <div>
                             <h4 class="text-sm font-semibold uppercase tracking-[0.22em] text-[#5f3c2a]">Product Categories</h4>
-                            <ul class="mt-4 space-y-3 text-sm">
+                            <ul class="mt-3 md:mt-4 space-y-2.5 md:space-y-3 text-sm">
                                 <li><a href="{{ route('category.show', 'resin-products') }}" class="text-[#4a3a2f] hover:text-amber-800 transition-colors">Resin Art</a></li>
                                 <li><a href="{{ route('category.show', 'candles') }}" class="text-[#4a3a2f] hover:text-amber-800 transition-colors">Scented Candles</a></li>
                                 <li><a href="{{ route('category.show', 'pipe-cleaner-crafts') }}" class="text-[#4a3a2f] hover:text-amber-800 transition-colors">Pipe Cleaner Craft</a></li>
@@ -557,9 +557,13 @@
                 </div>
             </div>
 
-            <div class="mt-12 pt-8 border-t border-amber-100/70 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-[#4a3a2f]">
-                <p>&copy; {{ date('Y') }} Krafty Curvz. All rights reserved.</p>
-                <p class="text-xs text-amber-800/90 tracking-wide">Handmade with love • Secure packaging • Custom orders available</p>
+            <div class="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-amber-100/70 flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-[#4a3a2f]">
+                <p>&copy; {{ date('Y') }} {{ $siteSettings->site_name ?? 'Krafty Curvz' }}. All rights reserved.</p>
+                @if(!empty(trim((string) $siteSettings->footer_text)))
+                    <p class="text-xs text-amber-800/90 tracking-wide whitespace-pre-line">{{ trim((string) $siteSettings->footer_text) }}</p>
+                @else
+                    <p class="text-xs text-amber-800/90 tracking-wide">Handmade with love • Secure packaging • Custom orders available</p>
+                @endif
             </div>
         </div>
     </footer>

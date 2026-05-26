@@ -29,3 +29,26 @@
 .kc-btn-glow:hover {
   box-shadow: 0 14px 28px rgba(180, 83, 9, 0.28);
 }
+
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  section + section {
+    margin-top: 0;
+  }
+
+  img,
+  canvas,
+  video {
+    max-width: 100%;
+  }
+
+  .shadow-large,
+  .shadow-medium,
+  .shadow-soft {
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  }
+}

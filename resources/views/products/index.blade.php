@@ -32,17 +32,17 @@
 
 @section('content')
 <!-- Shop Header -->
-<section class="relative flex items-center py-10 md:py-24 min-h-[420px] md:min-h-[540px] overflow-hidden {{ !empty($siteSettings->banner_background) ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
+<section class="relative flex items-center py-12 md:py-24 min-h-[300px] sm:min-h-[360px] md:min-h-[540px] overflow-hidden {{ !empty($siteSettings->banner_background) ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
          @if(!empty($siteSettings->banner_background))
              style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
          @endif>
     <div class="absolute inset-0 bg-gradient-to-b from-black/25 to-black/45"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="relative text-center">
-            <h1 class="text-4xl font-bold {{ !empty($siteSettings->banner_background) ? 'text-white' : 'text-gray-900' }} mb-4">
+            <h1 class="text-3xl sm:text-4xl font-bold {{ !empty($siteSettings->banner_background) ? 'text-white' : 'text-gray-900' }} mb-3 md:mb-4">
                 Shop Collection
             </h1>
-            <p class="text-lg {{ !empty($siteSettings->banner_background) ? 'text-white' : 'text-gray-600' }} max-w-2xl mx-auto">
+            <p class="text-base md:text-lg {{ !empty($siteSettings->banner_background) ? 'text-white' : 'text-gray-600' }} max-w-2xl mx-auto">
                 Discover our beautiful collection of handmade resin art pieces
             </p>
         </div>
@@ -50,14 +50,14 @@
 </section>
 
 <!-- Shop Content -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex flex-col lg:flex-row gap-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="flex flex-col lg:flex-row gap-6 md:gap-8">
         <!-- Filters Sidebar -->
         <aside class="lg:w-64 flex-shrink-0">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold mb-4">Filters</h2>
+            <div class="bg-white rounded-lg shadow p-4 md:p-6">
+                <h2 class="text-lg font-semibold mb-3 md:mb-4">Filters</h2>
                 
-                <form id="filters-form" method="GET" action="{{ route('products.index') }}" class="space-y-6">
+                <form id="filters-form" method="GET" action="{{ route('products.index') }}" class="space-y-4 md:space-y-6">
                     <!-- Search -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
@@ -140,7 +140,7 @@
         <div class="flex-1">
             @if($products->count() > 0)
                 <!-- Results Header -->
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex justify-between items-center mb-5 md:mb-6">
                     <p class="text-gray-600">{{ $products->total() }} products found</p>
                     
                     <!-- Sort Dropdown (Mobile) -->
@@ -156,7 +156,7 @@
                 </div>
 
                 <!-- Products Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
                     @foreach($products as $product)
                         @php $isOutOfStock = $product->manage_stock && (int) ($product->stock_quantity ?? 0) <= 0; @endphp
                         @php
@@ -252,13 +252,13 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-12">
+                <div class="mt-8 md:mt-12">
                     {{ $products->links() }}
                 </div>
             @else
                 <!-- Empty State -->
-                <div class="text-center py-12">
-                    <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                <div class="text-center py-8 md:py-12">
+                    <div class="w-20 h-20 md:w-24 md:h-24 mx-auto mb-5 md:mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
