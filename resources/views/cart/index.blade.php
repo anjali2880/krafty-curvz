@@ -8,7 +8,7 @@
     <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
 
     @if(empty($cart) || count($cart) === 0)
-        <div class="text-center py-16">
+        <div class="text-center py-10 md:py-16">
             <svg class="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
             <h2 class="text-xl font-semibold text-gray-600 mb-2">Your cart is empty</h2>
             <a href="{{ route('products.index') }}" class="text-amber-700 hover:text-amber-800 font-medium">Continue Shopping &rarr;</a>

@@ -31,7 +31,7 @@
 
 @section('content')
 <section
-    class="relative flex items-center py-20 md:py-24 min-h-[420px] md:min-h-[540px] bg-cover bg-center bg-no-repeat"
+    class="relative flex items-center py-10 md:py-24 min-h-[420px] md:min-h-[540px] bg-cover bg-center bg-no-repeat"
     style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ !empty($siteSettings->banner_background) ? asset('storage/' . $siteSettings->banner_background) : 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=2000&q=80' }}');"
 >
     <div class="absolute inset-0 bg-gradient-to-b from-black/25 to-black/45"></div>

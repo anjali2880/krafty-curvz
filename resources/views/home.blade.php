@@ -13,7 +13,7 @@
 @section('content')
 <!-- Hero Section -->
 <section
-    class="relative flex items-center py-20 md:py-24 min-h-[420px] md:min-h-[540px] {{ $siteSettings->banner_background ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
+    class="relative flex items-center py-10 md:py-24 min-h-[420px] md:min-h-[540px] {{ $siteSettings->banner_background ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
     @if($siteSettings->banner_background)
         style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
     @endif
@@ -43,7 +43,7 @@
 
 <!-- Categories Section -->
 @if($categories->count() > 0)
-<section class="py-16">
+<section class="py-10 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center text-gray-900 mb-12">Shop by Category</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -87,7 +87,7 @@
 
 <!-- New Arrivals -->
 @if($newArrivals->count() > 0)
-<section class="py-16">
+<section class="py-10 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">New Arrivals</h2>
@@ -106,7 +106,7 @@
 
 <!-- Featured Products -->
 @if($featuredProducts->count() > 0)
-<section class="py-16 bg-gray-50">
+<section class="py-10 md:py-16 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
@@ -130,7 +130,7 @@
 
 <!-- CTA Section -->
 <section
-    class="relative py-20 bg-cover bg-center bg-no-repeat"
+    class="relative py-10 md:py-20 bg-cover bg-center bg-no-repeat"
     style="background-image: url('{{ asset('images/ourstory.png') }}');"
 >
     <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/55 to-black/65"></div>

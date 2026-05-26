@@ -32,7 +32,7 @@
 
 @section('content')
 <!-- Shop Header -->
-<section class="relative flex items-center py-20 md:py-24 min-h-[420px] md:min-h-[540px] overflow-hidden {{ !empty($siteSettings->banner_background) ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
+<section class="relative flex items-center py-10 md:py-24 min-h-[420px] md:min-h-[540px] overflow-hidden {{ !empty($siteSettings->banner_background) ? 'bg-cover bg-center bg-no-repeat' : 'bg-gray-100' }}"
          @if(!empty($siteSettings->banner_background))
              style="background-image: linear-gradient(120deg, rgba(12, 16, 24, 0.55), rgba(20, 24, 32, 0.40)), url('{{ asset('storage/' . $siteSettings->banner_background) }}');"
          @endif>
