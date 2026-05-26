@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\SiteSettingsController;
+use App\Http\Controllers\Admin\DeployController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -80,5 +81,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('settings', [SiteSettingsController::class, 'index'])->name('settings.index');
         Route::put('settings', [SiteSettingsController::class, 'update'])->name('settings.update');
+
+        // Deployment Manager
+        Route::prefix('deploy')->name('deploy.')->group(function () {
+            Route::get('/',              [DeployController::class, 'index'])->name('index');
+            Route::post('/',             [DeployController::class, 'run'])->name('run');
+            Route::get('{log}/status',   [DeployController::class, 'status'])->name('status');
+        });
     });
 });
