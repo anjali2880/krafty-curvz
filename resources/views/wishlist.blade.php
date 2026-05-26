@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Wishlist')
-@section('meta_description', 'Your wishlist on ' . ($siteSettings->site_name ?? 'Krafty Curvz') . '.')
-@section('canonical', route('wishlist'))
+@section('robots', 'noindex, follow')
 
 @section('content')
 <section class="py-14 md:py-20 bg-[#f5f2ed]">

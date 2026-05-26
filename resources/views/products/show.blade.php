@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $product->name . ' | Handmade Craft Product')
+@section('title', $product->name)
 @section('meta_description', \Illuminate\Support\Str::limit(strip_tags((string) $product->description), 155, '') ?: ('Buy ' . $product->name . ' at Krafty Curvz. Handmade resin and craft product with premium artisan finish.'))
 @section('canonical', route('products.show', $product->slug))
 @section('og_type', 'product')

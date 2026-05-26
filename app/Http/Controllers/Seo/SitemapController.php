@@ -9,6 +9,26 @@ use Illuminate\Http\Response;
 
 class SitemapController extends Controller
 {
+    public function robots(): Response
+    {
+        $content = implode("\n", [
+            'User-agent: *',
+            'Disallow: /admin/',
+            'Disallow: /cart',
+            'Disallow: /checkout',
+            'Disallow: /my-orders',
+            'Disallow: /wishlist',
+            'Disallow: /login',
+            'Disallow: /register',
+            'Disallow: /password/',
+            'Disallow: /email/',
+            '',
+            'Sitemap: ' . route('sitemap'),
+        ]);
+
+        return response($content, 200)->header('Content-Type', 'text/plain');
+    }
+
     public function index(): Response
     {
         $urls = [

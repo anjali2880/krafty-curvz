@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Register')
+@section('robots', 'noindex, follow')
 
 @section('content')
 <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

@@ -1,6 +1,34 @@
 @extends('layouts.app')
 
 @section('title', 'Shop')
+@section('meta_description', 'Browse our full collection of handmade resin art, scented candles, keychains, photo frames & custom gifts. Free custom orders available at Krafty Curvz.')
+@section('canonical', route('products.index'))
+@php
+    $shopOgImage = $siteSettings->banner_background
+        ? asset('storage/' . $siteSettings->banner_background)
+        : ($siteSettings->logo ? asset('storage/' . $siteSettings->logo) : '');
+@endphp
+@section('og_image', $shopOgImage)
+@section('og_type', 'website')
+
+@push('head')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Shop | {{ $siteSettings->site_name }}",
+  "description": "Browse our full collection of handmade resin art, scented candles, keychains, photo frames & custom gifts.",
+  "url": "{{ route('products.index') }}",
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ route('home') }}"},
+      {"@type": "ListItem", "position": 2, "name": "Shop", "item": "{{ route('products.index') }}"}
+    ]
+  }
+}
+</script>
+@endpush
 
 @section('content')
 <!-- Shop Header -->

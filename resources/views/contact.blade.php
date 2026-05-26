@@ -1,8 +1,33 @@
 @extends('layouts.app')
 
 @section('title', 'Contact Us')
-@section('meta_description', 'Get in touch with ' . ($siteSettings->site_name ?? 'Krafty Curvz') . ' for custom resin products, candles, and handmade craft orders.')
+@section('meta_description', 'Get in touch with ' . ($siteSettings->site_name ?? 'Krafty Curvz') . ' for custom resin products, candles, and handmade craft orders. We reply fast!')
 @section('canonical', route('contact'))
+@php
+    $contactOgImage = $siteSettings->banner_background
+        ? asset('storage/' . $siteSettings->banner_background)
+        : ($siteSettings->logo ? asset('storage/' . $siteSettings->logo) : '');
+@endphp
+@section('og_image', $contactOgImage)
+
+@push('head')
+@php
+    $localBizSchema = array_filter([
+        '@context'    => 'https://schema.org',
+        '@type'       => 'LocalBusiness',
+        'name'        => $siteSettings->site_name ?? 'Krafty Curvz',
+        'url'         => url('/'),
+        'image'       => $siteSettings->logo ? asset('storage/' . $siteSettings->logo) : null,
+        'description' => 'Handmade resin art, scented candles & creative gifts crafted with love.',
+        'email'       => !empty($siteSettings->contact_email) ? $siteSettings->contact_email : null,
+        'telephone'   => !empty($siteSettings->whatsapp_number) ? '+' . preg_replace('/\D+/', '', $siteSettings->whatsapp_number) : null,
+        'sameAs'      => array_values(array_filter([
+            !empty($siteSettings->instagram_url) ? $siteSettings->instagram_url : null,
+        ])) ?: null,
+    ]);
+@endphp
+<script type="application/ld+json">{!! json_encode($localBizSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}</script>
+@endpush
 
 @section('content')
 <section

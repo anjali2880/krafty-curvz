@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'Home')
+@section('meta_description', 'Discover handmade resin art, scented candles & personalised gifts by Krafty Curvz. Shop coasters, keychains, photo frames & custom pieces crafted with love.')
+@section('canonical', route('home'))
+@php
+    $homeOgImage = $siteSettings->banner_background
+        ? asset('storage/' . $siteSettings->banner_background)
+        : ($siteSettings->logo ? asset('storage/' . $siteSettings->logo) : '');
+@endphp
+@section('og_image', $homeOgImage)
 
 @section('content')
 <!-- Hero Section -->

@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('title', 'About Us')
-@section('meta_description', 'Learn about ' . ($siteSettings->site_name ?? 'Krafty Curvz') . ', our story, values, and handmade resin creations.')
+@section('meta_description', 'Learn about ' . ($siteSettings->site_name ?? 'Krafty Curvz') . ' – our story, values, and handmade resin creations crafted with care.')
 @section('canonical', route('about'))
+@php
+    $aboutOgImage = $siteSettings->banner_background
+        ? asset('storage/' . $siteSettings->banner_background)
+        : ($siteSettings->logo ? asset('storage/' . $siteSettings->logo) : '');
+@endphp
+@section('og_image', $aboutOgImage)
 
 @section('content')
 <section

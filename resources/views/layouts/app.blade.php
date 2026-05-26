@@ -6,12 +6,85 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    @php
+        $_seoPage  = $__env->yieldContent('title', '');
+        $_seoDesc  = $__env->yieldContent('meta_description', 'Beautiful handmade resin products by ' . $siteSettings->site_name . ' – Coasters, Trays, Keychains, Wall Art & Custom Gifts');
+        $_seoCanon = ltrim($__env->yieldContent('canonical', '')) ?: url()->current();
+        $_seoOgImg = ltrim($__env->yieldContent('og_image', '')) ?: ($siteSettings->logo ? asset('storage/' . $siteSettings->logo) : '');
+        $_seoOgTyp = $__env->yieldContent('og_type', 'website');
+        $_seoRobots= $__env->yieldContent('robots', 'index, follow');
+        $_seoTitle = (empty($_seoPage) || $_seoPage === 'Home')
+            ? $siteSettings->site_name . ' | Handmade Resin Art & Custom Gifts'
+            : $_seoPage . ' | ' . $siteSettings->site_name;
+
+        /* --- Global JSON-LD payloads --- */
+        $_orgSchema = array_filter([
+            '@context'     => 'https://schema.org',
+            '@type'        => 'Organization',
+            'name'         => $siteSettings->site_name,
+            'url'          => url('/'),
+            'logo'         => $siteSettings->logo ? ['@type' => 'ImageObject', 'url' => asset('storage/' . $siteSettings->logo)] : null,
+            'contactPoint' => !empty($siteSettings->contact_email)
+                ? ['@type' => 'ContactPoint', 'contactType' => 'customer support', 'email' => $siteSettings->contact_email]
+                : null,
+            'sameAs'       => array_values(array_filter([
+                !empty($siteSettings->instagram_url) ? $siteSettings->instagram_url : null,
+                !empty($siteSettings->whatsapp_number)
+                    ? 'https://wa.me/' . preg_replace('/\D+/', '', $siteSettings->whatsapp_number)
+                    : null,
+            ])) ?: null,
+        ]);
+        $_siteSchema = [
+            '@context' => 'https://schema.org',
+            '@type'    => 'WebSite',
+            'name'     => $siteSettings->site_name,
+            'url'      => url('/'),
+            'potentialAction' => [
+                '@type'       => 'SearchAction',
+                'target'      => ['@type' => 'EntryPoint', 'urlTemplate' => route('products.index') . '?search={search_term_string}'],
+                'query-input' => 'required name=search_term_string',
+            ],
+        ];
+    @endphp
+
+    {{-- Favicon --}}
     @if($siteSettings->favicon)
         <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSettings->favicon) }}">
     @endif
-    <title>@yield('title', $siteSettings->site_name) - {{ $siteSettings->site_name }} | Handmade Resin Products</title>
-    <meta name="description" content="@yield('meta_description', 'Beautiful handmade resin products by ' . $siteSettings->site_name . ' - Coasters, Trays, Keychains, Wall Art & Custom Gifts')">
+
+    {{-- Core meta --}}
+    <title>{{ $_seoTitle }}</title>
+    <meta name="description" content="{{ $_seoDesc }}">
+    <link rel="canonical" href="{{ $_seoCanon }}">
+    <meta name="robots" content="{{ $_seoRobots }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    {{-- Open Graph --}}
+    <meta property="og:type"        content="{{ $_seoOgTyp }}">
+    <meta property="og:site_name"   content="{{ $siteSettings->site_name }}">
+    <meta property="og:locale"      content="en_IN">
+    <meta property="og:title"       content="{{ $_seoTitle }}">
+    <meta property="og:description" content="{{ $_seoDesc }}">
+    <meta property="og:url"         content="{{ $_seoCanon }}">
+    @if($_seoOgImg)
+    <meta property="og:image"       content="{{ $_seoOgImg }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height"content="630">
+    <meta property="og:image:alt"   content="{{ $_seoTitle }}">
+    @endif
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="{{ $_seoTitle }}">
+    <meta name="twitter:description" content="{{ $_seoDesc }}">
+    @if($_seoOgImg)
+    <meta name="twitter:image"       content="{{ $_seoOgImg }}">
+    @endif
+
+    {{-- Global Structured Data --}}
+    <script type="application/ld+json">{!! json_encode($_siteSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}</script>
+    <script type="application/ld+json">{!! json_encode($_orgSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}</script>
+
 	    @vite(['resources/css/app.css', 'resources/js/app.js'])
 	    @stack('head')
 	    @stack('styles')

@@ -21,6 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/category/{categorySlug}', [ProductController::class, 'index'])->name('category.show');
