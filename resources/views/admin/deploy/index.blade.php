@@ -3,192 +3,192 @@
 @section('title', 'Deployment Manager')
 
 @section('content')
-<div class="max-w-5xl mx-auto">
+<div class="max-w-4xl mx-auto space-y-6">
 
-    {{-- Page header --}}
-    <div class="flex items-center justify-between mb-6">
+    {{-- Page Header --}}
+    <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Deployment Manager</h1>
-            <p class="text-sm text-gray-500 mt-1">Deploy the latest code from <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono">main</code> branch to the production server.</p>
+            <p class="text-sm text-gray-500 mt-1">Push the latest code from <span class="font-mono bg-gray-100 px-1 rounded">main</span> to your production server via SSH.</p>
         </div>
-        <a href="{{ route('admin.dashboard') }}" class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
-            Back to Dashboard
+        <a href="{{ route('admin.dashboard') }}" class="text-sm text-gray-500 hover:text-gray-800 flex items-center gap-1">
+            &larr; Dashboard
         </a>
     </div>
 
-    {{-- ── Status Banner ────────────────────────────────────────────────────── --}}
+    {{-- Running Warning --}}
     @if($isRunning)
-    <div id="running-banner" class="flex items-center gap-3 bg-amber-50 border border-amber-200 text-amber-800 px-5 py-3 rounded-xl mb-6">
-        <svg class="w-5 h-5 animate-spin text-amber-500 flex-shrink-0" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-        </svg>
-        <span class="font-medium text-sm">A deployment is currently in progress. The Deploy button is disabled until it finishes.</span>
+    <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-lg flex items-center gap-2">
+        <svg class="w-5 h-5 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+        <span class="font-medium text-sm">A deployment is already running. Please wait for it to finish.</span>
     </div>
     @endif
 
-    {{-- ── Deploy Card ──────────────────────────────────────────────────────── --}}
-    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm mb-6">
-        <div class="px-6 py-5 border-b border-gray-100 flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.737 5.1a3.375 3.375 0 012.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 01.9 2.7m0 0a3 3 0 01-3 3m0 3h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008zm-3 6h.008v.008h-.008v-.008zm0-6h.008v.008h-.008v-.008z"/>
-                </svg>
-            </div>
-            <div>
-                <p class="font-semibold text-gray-900">Deploy to Production</p>
-                <p class="text-xs text-gray-500">Pulls from git, installs Composer deps, runs migrations &amp; clears cache.</p>
-            </div>
+    {{-- Config not set warning --}}
+    @if(!config('deploy.host') || !config('deploy.username'))
+    <div class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <strong>SSH not configured.</strong> Please set <code>DEPLOY_HOST</code>, <code>DEPLOY_USER</code>, <code>DEPLOY_PASSWORD</code>, and <code>DEPLOY_PATH</code> in your <code>.env</code> file, then run <code>php artisan config:clear</code>.
+    </div>
+    @endif
+
+    {{-- ── Main Deploy Card ── --}}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+
+        {{-- Card Header --}}
+        <div class="bg-gray-800 px-6 py-4">
+            <h2 class="text-white font-semibold text-lg">Deploy to Production</h2>
+            <p class="text-gray-400 text-sm mt-0.5">git pull &rarr; composer install &rarr; migrate &rarr; optimize:clear</p>
         </div>
 
-        <div class="px-6 py-5">
-            {{-- Server info (masked password) --}}
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Host</p>
-                    <p class="text-sm font-mono text-gray-800 truncate">{{ config('deploy.host') ?: '—' }}</p>
+        <div class="p-6 space-y-6">
+
+            {{-- Server Info Grid --}}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Host</p>
+                    <p class="text-sm font-mono text-gray-800 truncate">{{ config('deploy.host') ?: '(not set)' }}</p>
                 </div>
-                <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Port</p>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Port</p>
                     <p class="text-sm font-mono text-gray-800">{{ config('deploy.port') }}</p>
                 </div>
-                <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">User</p>
-                    <p class="text-sm font-mono text-gray-800 truncate">{{ config('deploy.username') ?: '—' }}</p>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">User</p>
+                    <p class="text-sm font-mono text-gray-800 truncate">{{ config('deploy.username') ?: '(not set)' }}</p>
                 </div>
-                <div class="bg-gray-50 rounded-xl p-3">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1">Path</p>
-                    <p class="text-sm font-mono text-gray-800 truncate" title="{{ config('deploy.path') }}">{{ Str::limit(config('deploy.path'), 28) ?: '—' }}</p>
+                <div class="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Password</p>
+                    <p class="text-sm font-mono text-gray-800">{{ config('deploy.password') ? '••••••••' : '(not set)' }}</p>
                 </div>
             </div>
 
-            {{-- Commands preview --}}
-            <div class="bg-gray-900 rounded-xl p-4 mb-6 font-mono text-xs text-gray-300 space-y-1.5">
-                <p class="text-gray-500 text-[10px] uppercase tracking-widest mb-2">Commands that will run</p>
-                @foreach(config('deploy.commands') as $cmd)
-                <div class="flex items-start gap-2">
-                    <span class="text-emerald-400 select-none">$</span>
-                    <span>{{ $cmd }}</span>
-                </div>
-                @endforeach
+            {{-- Path --}}
+            <div class="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
+                <p class="text-xs text-gray-400 uppercase tracking-wide font-semibold mb-1">Project Path</p>
+                <p class="text-sm font-mono text-gray-800 break-all">{{ config('deploy.path') ?: '(not set)' }}</p>
             </div>
 
-            {{-- Deploy button --}}
-            <form id="deploy-form">
-                @csrf
+            {{-- Commands Preview --}}
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wide font-semibold mb-2">Commands that will execute on server</p>
+                <div class="bg-gray-900 rounded-lg p-4 space-y-2">
+                    @foreach(config('deploy.commands') as $index => $cmd)
+                    <div class="flex items-center gap-3 text-sm font-mono">
+                        <span class="text-gray-500 select-none w-4 text-right flex-shrink-0">{{ $index + 1 }}</span>
+                        <span class="text-green-400">$</span>
+                        <span class="text-gray-200">{{ $cmd }}</span>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- ── DEPLOY BUTTON ── --}}
+            <div class="pt-2 border-t border-gray-100">
                 <button
                     id="deploy-btn"
-                    type="submit"
-                    {{ $isRunning ? 'disabled' : '' }}
-                    class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all
-                        {{ $isRunning
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-sm' }}"
+                    type="button"
+                    @if($isRunning || !config('deploy.host')) disabled @endif
+                    style="background-color: #4f46e5; color: #ffffff;"
+                    class="w-full py-4 rounded-xl font-bold text-lg tracking-wide flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                 >
-                    <svg id="btn-icon-rocket" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <svg id="btn-icon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.82m5.84-2.56a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.82m2.56-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
                     </svg>
-                    <svg id="btn-icon-spin" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                    </svg>
-                    <span id="btn-label">{{ $isRunning ? 'Deployment Running…' : 'Deploy Now' }}</span>
+                    <span id="btn-label">
+                        @if($isRunning)
+                            Deployment Running…
+                        @elseif(!config('deploy.host'))
+                            Configure SSH First
+                        @else
+                            🚀 Deploy Now
+                        @endif
+                    </span>
                 </button>
-            </form>
-        </div>
-    </div>
-
-    {{-- ── Live Output Panel ─────────────────────────────────────────────────── --}}
-    <div id="output-panel" class="bg-white rounded-2xl border border-gray-200 shadow-sm mb-6 hidden">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
-                <p class="font-semibold text-gray-900 text-sm">Deployment Output</p>
-                <span id="status-badge" class="ml-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Running…</span>
+                <p class="text-center text-xs text-gray-400 mt-2">This will run the commands above on your production server.</p>
             </div>
-            <span id="duration-badge" class="text-xs text-gray-400 hidden"></span>
         </div>
-        <pre id="output-body" class="p-5 text-xs font-mono bg-gray-950 text-gray-200 rounded-b-2xl overflow-x-auto min-h-[160px] max-h-[480px] overflow-y-auto whitespace-pre-wrap leading-relaxed"></pre>
     </div>
 
-    {{-- ── Deployment History ───────────────────────────────────────────────── --}}
-    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+    {{-- ── Live Output ── --}}
+    <div id="output-panel" class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden" style="display:none;">
+        <div class="px-5 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+            <div class="flex items-center gap-2">
+                <span id="status-dot" class="inline-block w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                <span class="font-semibold text-sm text-gray-800">Deployment Output</span>
+                <span id="status-badge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 ml-1">Running…</span>
+            </div>
+            <span id="duration-text" class="text-xs text-gray-400"></span>
+        </div>
+        <pre id="output-body" style="background:#0f172a; color:#e2e8f0; padding:1.25rem; font-size:0.75rem; font-family:monospace; min-height:180px; max-height:500px; overflow-y:auto; white-space:pre-wrap; line-height:1.6; margin:0;"></pre>
+    </div>
+
+    {{-- ── Deployment History ── --}}
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <p class="font-semibold text-gray-900 text-sm">Deployment History</p>
-            <span class="text-xs text-gray-400">Last 15 deployments</span>
+            <h3 class="font-semibold text-gray-900">Deployment History</h3>
+            <span class="text-xs text-gray-400">Last 15 runs</span>
         </div>
 
         @if($logs->isEmpty())
-            <div class="px-6 py-12 text-center text-sm text-gray-400">No deployments yet.</div>
+            <div class="py-14 text-center text-gray-400 text-sm">No deployments yet. Click "Deploy Now" to start.</div>
         @else
-        <div class="divide-y divide-gray-50">
-            @foreach($logs as $log)
-            <div class="px-6 py-4 flex items-start gap-4 hover:bg-gray-50/50 transition-colors">
-                {{-- Status icon --}}
-                <div class="flex-shrink-0 mt-0.5">
-                    @if($log->status === 'success')
-                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-100">
-                            <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                        </span>
-                    @elseif($log->status === 'failed')
-                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-rose-100">
-                            <svg class="w-4 h-4 text-rose-600" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </span>
-                    @elseif($log->status === 'running')
-                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-amber-100">
-                            <svg class="w-4 h-4 text-amber-600 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
-                        </span>
-                    @else
-                        <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100">
-                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        </span>
-                    @endif
-                </div>
-
-                {{-- Details --}}
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span @class([
-                            'text-xs font-semibold px-2 py-0.5 rounded-full',
-                            'bg-emerald-100 text-emerald-700' => $log->status === 'success',
-                            'bg-rose-100 text-rose-700'       => $log->status === 'failed',
-                            'bg-amber-100 text-amber-700'     => $log->status === 'running',
-                            'bg-gray-100 text-gray-600'       => $log->status === 'pending',
-                        ])>{{ ucfirst($log->status) }}</span>
-                        <span class="text-xs text-gray-500">by {{ optional($log->user)->email ?? 'Unknown' }}</span>
-                        @if($log->durationSeconds() !== null)
-                            <span class="text-xs text-gray-400">— {{ $log->durationSeconds() }}s</span>
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wide border-b border-gray-100">
+                    <th class="px-5 py-3 text-left font-semibold">Status</th>
+                    <th class="px-5 py-3 text-left font-semibold">Started</th>
+                    <th class="px-5 py-3 text-left font-semibold">Duration</th>
+                    <th class="px-5 py-3 text-left font-semibold">By</th>
+                    <th class="px-5 py-3 text-left font-semibold">Log</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                @foreach($logs as $log)
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-5 py-3">
+                        @if($log->status === 'success')
+                            <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                Success
+                            </span>
+                        @elseif($log->status === 'failed')
+                            <span class="inline-flex items-center gap-1 bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Failed
+                            </span>
+                        @elseif($log->status === 'running')
+                            <span class="inline-flex items-center gap-1 bg-yellow-100 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/></svg>
+                                Running
+                            </span>
+                        @else
+                            <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">{{ ucfirst($log->status) }}</span>
                         @endif
-                    </div>
-                    <p class="text-xs text-gray-400 mt-1">
-                        Started: {{ $log->started_at?->format('d M Y, H:i:s') ?? 'N/A' }}
-                        @if($log->finished_at)
-                            &nbsp;·&nbsp; Finished: {{ $log->finished_at->format('H:i:s') }}
+                    </td>
+                    <td class="px-5 py-3 text-gray-600">{{ $log->started_at?->format('d M Y, H:i:s') ?? '—' }}</td>
+                    <td class="px-5 py-3 text-gray-600">{{ $log->durationSeconds() !== null ? $log->durationSeconds() . 's' : '—' }}</td>
+                    <td class="px-5 py-3 text-gray-600">{{ optional($log->user)->email ?? 'Unknown' }}</td>
+                    <td class="px-5 py-3">
+                        @if($log->output)
+                            <button type="button" onclick="toggleLog({{ $log->id }})" class="text-indigo-600 hover:underline text-xs font-medium">View</button>
+                        @else
+                            <span class="text-gray-300 text-xs">—</span>
                         @endif
-                    </p>
-                </div>
-
-                {{-- Toggle log output --}}
+                    </td>
+                </tr>
                 @if($log->output)
-                <button
-                    type="button"
-                    onclick="toggleLog({{ $log->id }})"
-                    class="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex-shrink-0 mt-1"
-                >View log</button>
+                <tr id="log-{{ $log->id }}" style="display:none;">
+                    <td colspan="5" class="px-5 pb-4">
+                        <pre style="background:#0f172a; color:#e2e8f0; padding:1rem; font-size:0.7rem; font-family:monospace; border-radius:0.5rem; max-height:280px; overflow-y:auto; white-space:pre-wrap; line-height:1.5; margin:0;">{{ $log->output }}</pre>
+                    </td>
+                </tr>
                 @endif
-            </div>
-
-            {{-- Collapsible log output --}}
-            @if($log->output)
-            <div id="log-{{ $log->id }}" class="hidden px-6 pb-4">
-                <pre class="text-xs font-mono bg-gray-950 text-gray-200 p-4 rounded-xl overflow-x-auto max-h-72 overflow-y-auto whitespace-pre-wrap leading-relaxed">{{ $log->output }}</pre>
-            </div>
-            @endif
-            @endforeach
-        </div>
+                @endforeach
+            </tbody>
+        </table>
         @endif
     </div>
+
 </div>
 @endsection
 
@@ -196,149 +196,94 @@
 <script>
 (function () {
     const DEPLOY_URL  = "{{ route('admin.deploy.run') }}";
-    const STATUS_BASE = "{{ url('admin/deploy') }}/";
-    const CSRF        = document.querySelector('meta[name="csrf-token"]').content;
+    const CSRF        = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    let pollingTimer  = null;
-    let activeLogId   = null;
+    const btn          = document.getElementById('deploy-btn');
+    const btnLabel     = document.getElementById('btn-label');
+    const btnIcon      = document.getElementById('btn-icon');
+    const outputPanel  = document.getElementById('output-panel');
+    const outputBody   = document.getElementById('output-body');
+    const statusDot    = document.getElementById('status-dot');
+    const statusBadge  = document.getElementById('status-badge');
+    const durationText = document.getElementById('duration-text');
 
-    /* ── DOM refs ─────────────────────────────────────────────────────────── */
-    const form        = document.getElementById('deploy-form');
-    const btn         = document.getElementById('deploy-btn');
-    const btnLabel    = document.getElementById('btn-label');
-    const btnIconRocket = document.getElementById('btn-icon-rocket');
-    const btnIconSpin = document.getElementById('btn-icon-spin');
-    const outputPanel = document.getElementById('output-panel');
-    const outputBody  = document.getElementById('output-body');
-    const statusDot   = document.getElementById('status-dot');
-    const statusBadge = document.getElementById('status-badge');
-    const durationBadge = document.getElementById('duration-badge');
-
-    /* ── Helpers ──────────────────────────────────────────────────────────── */
-    function setButtonLoading(loading) {
-        btn.disabled = loading;
-        btnLabel.textContent = loading ? 'Deploying…' : 'Deploy Now';
-        btnIconRocket.classList.toggle('hidden', loading);
-        btnIconSpin.classList.toggle('hidden', !loading);
-        btn.className = loading
-            ? 'inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm bg-gray-100 text-gray-400 cursor-not-allowed'
-            : 'inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95 shadow-sm transition-all';
+    function setLoading(on) {
+        btn.disabled = on;
+        btn.style.opacity = on ? '0.7' : '1';
+        btnLabel.textContent = on ? 'Deploying… please wait' : '🚀 Deploy Now';
     }
 
     function showOutput(text) {
-        outputPanel.classList.remove('hidden');
+        outputPanel.style.display = 'block';
         outputBody.textContent = text;
-        // Auto-scroll to bottom
         outputBody.scrollTop = outputBody.scrollHeight;
     }
 
-    function setStatus(status, duration) {
-        const map = {
-            running: { dot: 'bg-amber-400 animate-pulse', badge: 'bg-amber-100 text-amber-700', label: 'Running…' },
-            success: { dot: 'bg-emerald-500',             badge: 'bg-emerald-100 text-emerald-700', label: 'Success' },
-            failed:  { dot: 'bg-rose-500',                badge: 'bg-rose-100 text-rose-700',     label: 'Failed'  },
-        };
-        const s = map[status] || map.running;
-
-        statusDot.className   = `w-2.5 h-2.5 rounded-full ${s.dot}`;
-        statusBadge.className = `ml-1 text-xs font-semibold px-2 py-0.5 rounded-full ${s.badge}`;
-        statusBadge.textContent = s.label;
-
-        if (duration !== undefined && duration !== null) {
-            durationBadge.textContent = `${duration}s`;
-            durationBadge.classList.remove('hidden');
+    function setStatus(status, seconds) {
+        if (status === 'success') {
+            statusDot.style.background   = '#22c55e';
+            statusBadge.textContent      = '✓ Success';
+            statusBadge.style.background = '#dcfce7';
+            statusBadge.style.color      = '#15803d';
+        } else if (status === 'failed') {
+            statusDot.style.background   = '#ef4444';
+            statusBadge.textContent      = '✗ Failed';
+            statusBadge.style.background = '#fee2e2';
+            statusBadge.style.color      = '#b91c1c';
+        } else {
+            statusDot.style.background   = '#f59e0b';
+            statusBadge.textContent      = 'Running…';
+            statusBadge.style.background = '#fef3c7';
+            statusBadge.style.color      = '#92400e';
         }
+        if (seconds != null) durationText.textContent = seconds + 's';
     }
 
-    function stopPolling() {
-        if (pollingTimer) {
-            clearInterval(pollingTimer);
-            pollingTimer = null;
-        }
-    }
-
-    function startPolling(logId) {
-        stopPolling();
-        activeLogId = logId;
-
-        pollingTimer = setInterval(async () => {
-            try {
-                const res  = await fetch(`${STATUS_BASE}${logId}/status`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
-                const data = await res.json();
-
-                showOutput(data.output || '');
-                setStatus(data.status, data.duration);
-
-                if (data.status === 'success' || data.status === 'failed') {
-                    stopPolling();
-                    setButtonLoading(false);
-                    // Reload history section after 1.5s
-                    setTimeout(() => window.location.reload(), 1500);
-                }
-            } catch {
-                // Silently ignore polling errors
-            }
-        }, 2000);
-    }
-
-    /* ── Form submit ──────────────────────────────────────────────────────── */
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
+    btn.addEventListener('click', async function () {
         if (btn.disabled) return;
 
-        setButtonLoading(true);
-        showOutput('Connecting to server…\n');
-        setStatus('running');
+        if (!confirm('This will deploy to the production server. Continue?')) return;
+
+        setLoading(true);
+        showOutput('Connecting to SSH server…\n');
+        setStatus('running', null);
 
         try {
             const res  = await fetch(DEPLOY_URL, {
-                method: 'POST',
+                method:  'POST',
                 headers: {
-                    'X-CSRF-TOKEN': CSRF,
+                    'X-CSRF-TOKEN':     CSRF,
                     'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json',
+                    'Accept':           'application/json',
                 },
             });
 
+            const data = await res.json();
+
             if (res.status === 409) {
-                // Another deployment is already running — start polling to show it
-                const data = await res.json();
-                showOutput(data.error + '\n\nPolling current deployment status…\n');
-
-                // Try to find the running log from history (first row)
-                const firstLogEl = document.querySelector('[data-log-id]');
-                if (firstLogEl) startPolling(parseInt(firstLogEl.dataset.logId));
-                else setButtonLoading(false);
-
+                showOutput('⚠ ' + data.error);
+                setStatus('failed', null);
+                setLoading(false);
                 return;
             }
 
-            const data = await res.json();
-
-            // Deployment finished synchronously (common on shared hosting)
-            showOutput(data.output || '');
+            showOutput(data.output || '(no output)');
             setStatus(data.status, data.duration);
-            setButtonLoading(false);
+            setLoading(false);
 
-            // Brief delay then reload to refresh history table
-            setTimeout(() => window.location.reload(), 2000);
+            setTimeout(function () { window.location.reload(); }, 2500);
 
         } catch (err) {
-            showOutput(`[Client Error] Failed to reach the server.\n${err.message}`);
-            setStatus('failed');
-            setButtonLoading(false);
+            showOutput('Connection error: ' + err.message);
+            setStatus('failed', null);
+            setLoading(false);
         }
     });
 
-    /* ── History toggle ───────────────────────────────────────────────────── */
     window.toggleLog = function (id) {
-        const el = document.getElementById(`log-${id}`);
-        if (el) el.classList.toggle('hidden');
+        const row = document.getElementById('log-' + id);
+        if (row) row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
     };
-
 })();
 </script>
 @endpush
