@@ -21,14 +21,14 @@
                 <table class="w-full table-auto divide-y divide-gray-200">
                     <thead class="bg-gray-900">
                         <tr>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Date</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Items</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order Type</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Total</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Status</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Payment Status</th>
-                            <th class="px-4 md:px-6 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Action</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Date</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Items</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Order Type</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Total</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Status</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Payment Status</th>
+                            <th class="px-4 py-3 md:py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-200">Action</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
