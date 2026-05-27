@@ -128,16 +128,6 @@
                     </div>
                 </div>
 
-                <!-- Footer -->
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">Footer</h2>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Footer Text</label>
-                        <textarea name="footer_text" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">{{ old('footer_text', $settings->footer_text) }}</textarea>
-                        @error('footer_text') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
-                    </div>
-                </div>
-
                 <div class="flex justify-end pt-4">
                     <button type="submit" class="px-6 py-2 bg-amber-700 hover:bg-amber-800 text-white rounded-lg text-sm font-medium">Save Settings</button>
                 </div>
