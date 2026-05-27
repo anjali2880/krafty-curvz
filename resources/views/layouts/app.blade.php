@@ -277,7 +277,7 @@
             }
 
             /* Slick spacing tweaks */
-            .kc-search-tags .slick-slide { margin: 0 8px; }
+            .kc-search-tags .slick-slide { margin: 2px 8px; }
             .kc-search-tags .slick-list { margin: 0 -8px; }
             /* Center suggestions when there are only a few tags */
             .kc-search-tags .slick-list { display: flex; justify-content: center; }

@@ -53,22 +53,22 @@
                                 };
                             @endphp
                             <tr class="hover:bg-amber-50/40 transition-colors">
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm font-semibold">
+                                <td class="px-4 py-3 md:py-4 text-sm font-semibold">
                                     <a href="{{ route('orders.show', $order) }}" class="text-amber-700 hover:text-amber-800 hover:underline">
                                         #{{ $order->order_number }}
                                     </a>
                                 </td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm text-slate-700">{{ $order->created_at->format('d M Y, h:i A') }}</td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm text-slate-700 font-medium">{{ $order->items->count() }}</td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm text-slate-700">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm font-semibold text-slate-900">&#8377;{{ number_format($order->total, 0) }}</td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
+                                <td class="px-4 py-3 md:py-4 text-sm text-slate-700">{{ $order->created_at->format('d M Y, h:i A') }}</td>
+                                <td class="px-4 py-3 md:py-4 text-sm text-slate-700 font-medium">{{ $order->items->count() }}</td>
+                                <td class="px-4 py-3 md:py-4 text-sm text-slate-700">{{ $order->customer_will_send_item ? 'Resin Preservation' : 'Normal' }}</td>
+                                <td class="px-4 py-3 md:py-4 text-sm font-semibold text-slate-900">&#8377;{{ number_format($order->total, 0) }}</td>
+                                <td class="px-4 py-3 md:py-4 text-sm">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full font-semibold {{ $statusClass }}">{{ $statusText }}</span>
                                 </td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
+                                <td class="px-4 py-3 md:py-4 text-sm">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full font-semibold {{ $paymentStatusClass }}">{{ $paymentStatusText }}</span>
                                 </td>
-                                <td class="px-4 md:px-6 py-3 md:py-4 text-sm">
+                                <td class="px-4 py-3 md:py-4 text-sm">
                                     <a href="{{ route('orders.show', $order) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 font-semibold transition-colors shadow-sm">
                                         View
                                     </a>
